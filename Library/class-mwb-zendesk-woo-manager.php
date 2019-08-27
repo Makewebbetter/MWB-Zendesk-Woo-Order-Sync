@@ -102,7 +102,7 @@ if ( ! class_exists ( 'MWB_ZENDESK_manager' ) ) {
 				else {
 
 					$data[] = array(
-						"message" => "No orders found"
+						"message" => _e( "No orders found", "zndskwoo" );
 					);
 				}
 				$data = json_encode( $data );
