@@ -20,7 +20,7 @@
  * Requires at least: 4.0
  * Tested up to: 5.2.2
  * WC Tested up to: 3.7.0
- * License: GPL-3.0+ 
+ * License: GPL-3.0+
  * License URI: https://www.gnu.org/licenses/gpl-3.0.txt
  * Text Domain: zndskwoo
  * Domain Path: /i18n/languages
@@ -31,23 +31,22 @@
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
-	exit; 
+	exit;
 }
 
 $activated = true;
-if ( function_exists('is_multisite') && is_multisite() ) {
-	
+if ( function_exists( 'is_multisite' ) && is_multisite() ) {
+
 	include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
-	
-	if ( !is_plugin_active( 'woocommerce/woocommerce.php' ) ) {
-		
+
+	if ( ! is_plugin_active( 'woocommerce/woocommerce.php' ) ) {
+
 		$activated = false;
 	}
-}
-else {
-	
+} else {
+
 	if ( ! in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
-		
+
 		$activated = false;
 	}
 }
@@ -55,70 +54,73 @@ else {
  * Check if WooCommerce is active
  *
  * @since 1.0.0
- **/
+ */
 
 if ( $activated ) {
-	
-	if( !defined( 'MWB_ZENDESK_PREFIX' ) )
+
+	if ( ! defined( 'MWB_ZENDESK_PREFIX' ) ) {
 		define( 'MWB_ZENDESK_PREFIX', 'mwb_zendesk' );
-	
-	if( !defined('MWB_ZENDESK_DIR' ) )
+	}
+
+	if ( ! defined( 'MWB_ZENDESK_DIR' ) ) {
 		define( 'MWB_ZENDESK_DIR', dirname( __FILE__ ) );
-	
-	if( !defined( 'MWB_ZENDESK_DIR_URL' ) )
+	}
+
+	if ( ! defined( 'MWB_ZENDESK_DIR_URL' ) ) {
 		define( 'MWB_ZENDESK_DIR_URL', plugin_dir_url( __FILE__ ) );
-	
-	if( !defined( 'MWB_ZENDESK_DIR_PATH' ) )
+	}
+
+	if ( ! defined( 'MWB_ZENDESK_DIR_PATH' ) ) {
 		define( 'MWB_ZENDESK_DIR_PATH', plugin_dir_path( __FILE__ ) );
-	
-	register_activation_hook(	__FILE__, 'mwb_zndsk_activation' );
-	add_action(	"wp_loaded", 'mwb_zndsk_activation' );
+	}
+
+	register_activation_hook( __FILE__, 'mwb_zndsk_activation' );
+	add_action( 'wp_loaded', 'mwb_zndsk_activation' );
 	/**
 	 * Activation hook
 	 *
 	 * @since    1.0.0
 	 */
-
 	function mwb_zndsk_activation() {
-		
+
 		do_action( 'mwb_zndsk_init' );
 	}
 	/**
 	 * Permission check
 	 *
 	 * @since    1.0.0
-	 * @param string  $request
+	 * @param string $request for accessing the request.
 	 * @return boolean true
 	 */
-
 	function mwb_zndsk_get_items_permissions_check( $request ) {
-		
+
 		return true;
 	}
 
-
+	 /**
+	  * Permission check
+	  *
+	  * @since    1.0.0
+	  */
 	function mwb_zndsk_add_api_file_for_plugin() {
 
-		//including supporting file of plugin.
-		include_once MWB_ZENDESK_DIR."/class-mwb-zendeskwoocommerce-api.php";
+		// including supporting file of plugin.
+		include_once MWB_ZENDESK_DIR . '/class-mwb-zendesk-connect-api.php';
 		$mwb_zndsk_instance = MWB_ZENDESK_Connect_Api::get_instance();
-	
+
 		add_action( 'rest_api_init', array( $mwb_zndsk_instance, 'mwb_zndsk_register_routes' ) );
-		
+
 		add_action( 'init', array( $mwb_zndsk_instance, 'mwb_zndsk_init_steps' ) );
 	}
 
 	add_action( 'plugins_loaded', 'mwb_zndsk_add_api_file_for_plugin' );
 
-}
-
-else {
+} else {
 	/**
 	 * Error notice
 	 *
 	 * @since    1.0.0
 	 */
-
 	function mwb_zndsk_plugin_error_notice() {
 		?>
 			<div class="error notice is-dismissible">
@@ -126,21 +128,20 @@ else {
 			</div>
 			<?php
 	}
-		
+
 	add_action( 'admin_init', 'mwb_zndsk_plugin_deactivate' );
 	/**
 	 * Deactivation hook
 	 *
 	 * @since    1.0.0
 	 */
-
 	function mwb_zndsk_plugin_deactivate() {
 
 		deactivate_plugins( plugin_basename( __FILE__ ) );
-		
+
 		global $wp_rewrite;
 		$wp_rewrite->flush_rules();
-		
+
 		add_action( 'admin_notices', 'mwb_zndsk_plugin_error_notice' );
 	}
 }
