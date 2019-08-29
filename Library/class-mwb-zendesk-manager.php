@@ -2,29 +2,41 @@
 /**
  * Exit if accessed directly
  */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 /**
+ * This file manages to send order details to Zendesk.
  *
  * @link       https://makewebbbetter.com/
  * @since      1.0.0
  *
- * @package    zndskwoo
- * @subpackage zndskwoo/Library
+ * @package    zendesk-woocommerce-order-sync
+ * @subpackage zendesk-woocommerce-order-sync/Library
  */
-if ( ! class_exists ( 'MWB_ZENDESK_manager' ) ) {
+
+if ( ! class_exists ( 'MWB_ZENDESK_Manager' ) ) {
+	/**
+	* This file manages to send order details to Zendesk.
+	*
+	* @link       https://makewebbbetter.com/
+	* @since      1.0.0
+	*
+	* @package    zendesk-woocommerce-order-sync
+	* @subpackage zendesk-woocommerce-order-sync/Library
+	*/
 	
-	class MWB_ZENDESK_manager{
+	class MWB_ZENDESK_Manager{
 		
 		private static $_instance;
-		
 		/**
 		 * Initialize the class and set its object.
 		 *
 		 * @since    1.0.0
 		 */
-		public static function getInstance() {
+
+		public static function get_instance() {
 		
 			self::$_instance = new self;
 			if( !self::$_instance instanceof self )
@@ -32,22 +44,49 @@ if ( ! class_exists ( 'MWB_ZENDESK_manager' ) ) {
 		
 			return self::$_instance;
 		}
-
 		/**
 		 * Constructor of the class for fetching the endpoint.
 		 *
 		 * @since    1.0.0
 		 */
+
 		public function __construct() {
 			
 			$this->endpoint = get_option('mwb_zndsk_endpoint','zndskwoo');
+			$this->mwb_zndsk_set_locale();
 		}
-		
+		/**
+		 * Define the locale for this plugin for internationalization.
+		 *
+		 * @since    1.0.0
+		 * @access   private
+		 */
+
+		private function mwb_zndsk_set_locale() {
+
+			$this->mwb_zndsk_load_plugin_textdomain();
+		}
+		/**
+		 * Load the plugin text domain for translation.
+		 *
+		 * @since    1.0.0
+		 */
+
+		public function mwb_zndsk_load_plugin_textdomain() {
+
+			
+			$var = load_plugin_textdomain(
+				'zndskwoo',
+				false,
+				dirname( dirname( plugin_basename( __FILE__ ) ) ) . '/language/'
+			);
+		}
 		/**
 		 * Register routes for the order details class.
 		 *
 		 * @since    1.0.0
 		 */
+
 		public function mwb_zndsk_register_routes() {
 			
 			register_rest_route( $this->endpoint, '/order_details' , array(
@@ -58,6 +97,13 @@ if ( ! class_exists ( 'MWB_ZENDESK_manager' ) ) {
 				)
 			) );
 		}
+		/**
+		 * Sends response to zendesk.
+		 *
+		 * @since    1.0.0
+		 * @param array   $request   requested parameters from zendesk
+		 * @return array  $data      order details
+		 */
 
 		public function mwb_zndsk_woo_order_sync( $request ) {
 
@@ -102,7 +148,7 @@ if ( ! class_exists ( 'MWB_ZENDESK_manager' ) ) {
 				else {
 
 					$data[] = array(
-						"message" => _e( "No orders found", "zndskwoo" )
+						"message" => __("No orders found", "zndskwoo")
 					);
 				}
 				$data = json_encode( $data );

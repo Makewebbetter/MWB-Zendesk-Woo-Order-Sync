@@ -1,14 +1,27 @@
 <?php
 /**
+ * The plugin bootstrap file
+ *
+ * This file is read by WordPress to generate the plugin information in the plugin
+ * admin area. This file also includes all of the dependencies used by the plugin and
+ * registers the activation and deactivation functions.
+ *
+ * @link              https://makewebbetter.com/
+ * @since             1.0.0
+ * @package           zendesk-woocommerce-order-sync
+ *
+ * @wordpress-plugin
  * Plugin Name: Zendesk Woocommerce Order Sync
  * Plugin URI: http://makewebbetter.com
  * Description: Get your WooCommerce order details to your Zendesk account.
  * Author: Makewebbetter
  * Author URI: http://makewebbetter.com
  * Version: 1.0.0
- * Requires at least: 3.8
- * Tested up to: 4.9.4
- * WC Tested up to: 3.4.3
+ * Requires at least: 4.0
+ * Tested up to: 5.2.2
+ * WC Tested up to: 3.7.0
+ * License: GPL-3.0+ 
+ * License URI: https://www.gnu.org/licenses/gpl-3.0.txt
  * Text Domain: zndskwoo
  * Domain Path: /i18n/languages
  */
@@ -16,6 +29,7 @@
 /**
  * Exit if accessed directly
  */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; 
 }
@@ -37,10 +51,12 @@ else {
 		$activated = false;
 	}
 }
-
 /**
  * Check if WooCommerce is active
+ *
+ * @since 1.0.0
  **/
+
 if ( $activated ) {
 	
 	if( !defined( 'MWB_ZENDESK_PREFIX' ) )
@@ -62,16 +78,19 @@ if ( $activated ) {
 	 *
 	 * @since    1.0.0
 	 */
+
 	function mwb_zndsk_activation() {
 		
 		do_action( 'mwb_zndsk_init' );
 	}
-
 	/**
 	 * Permission check
 	 *
 	 * @since    1.0.0
+	 * @param string  $request
+	 * @return boolean true
 	 */
+
 	function mwb_zndsk_get_items_permissions_check( $request ) {
 		
 		return true;
@@ -81,8 +100,8 @@ if ( $activated ) {
 	function mwb_zndsk_add_api_file_for_plugin() {
 
 		//including supporting file of plugin.
-		include_once MWB_ZENDESK_DIR."/mwb_zendeskwoocommerce_api.php";
-		$mwb_zndsk_instance = MWB_ZENDESK_connect_api::getInstance();
+		include_once MWB_ZENDESK_DIR."/class-mwb-zendeskwoocommerce-api.php";
+		$mwb_zndsk_instance = MWB_ZENDESK_Connect_Api::get_instance();
 	
 		add_action( 'rest_api_init', array( $mwb_zndsk_instance, 'mwb_zndsk_register_routes' ) );
 		
@@ -99,10 +118,11 @@ else {
 	 *
 	 * @since    1.0.0
 	 */
+
 	function mwb_zndsk_plugin_error_notice() {
 		?>
 			<div class="error notice is-dismissible">
-			<p><?php _e( 'Woocommerce is not activated, please activate woocommerce first to install and use zendesk woocommerce plugin.', 'zndskwoo' ); ?></p>
+			<p><?php esc_html_e( 'Woocommerce is not activated, please activate woocommerce first to install and use zendesk woocommerce plugin.', 'zndskwoo' ); ?></p>
 			</div>
 			<?php
 	}
@@ -113,6 +133,7 @@ else {
 	 *
 	 * @since    1.0.0
 	 */
+
 	function mwb_zndsk_plugin_deactivate() {
 
 		deactivate_plugins( plugin_basename( __FILE__ ) );

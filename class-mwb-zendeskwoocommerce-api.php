@@ -3,6 +3,7 @@
 /**
  * Exit if accessed directly
  */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -11,13 +12,20 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @link       https://makewebbetter.com/
  * @since      1.0.0
- *
- * @package    zndskwoo
- * @subpackage zndskwoo/
+ * @package    zendesk-woocommerce-order-sync
  */
-include_once MWB_ZENDESK_DIR.'/Library/class-mwb-zendesk-woo-manager.php';
 
-class MWB_ZENDESK_connect_api{
+include_once MWB_ZENDESK_DIR.'/Library/class-mwb-zendesk-manager.php';
+/**
+ * The api-specific functionality of the plugin.
+ *
+ * @link       https://makewebbetter.com/
+ * @since      1.0.0
+ * @package    zendesk-woocommerce-order-sync
+ * @author     MakeWebBetter <webmaster@makewebbetter.com>
+ */
+
+class MWB_ZENDESK_Connect_Api{
 	
 	private static $_instance;
 	/**
@@ -25,7 +33,8 @@ class MWB_ZENDESK_connect_api{
 	 *
 	 * @since    1.0.0
 	 */
-	public static function getInstance() {
+
+	public static function get_instance() {
 		
 		self::$_instance = new self;
 		if( !self::$_instance instanceof self )
@@ -38,16 +47,18 @@ class MWB_ZENDESK_connect_api{
 	 *
 	 * @since    1.0.0
 	 */
+
 	public function __construct(){
 	
-		$this->mwb_zendeskconnect_Manager = MWB_ZENDESK_manager::getInstance();
+		$this->mwb_zendeskconnect_manager = MWB_ZENDESK_Manager::get_instance();
 	}
 	/**
 	 * Init steps for initializing data.
 	 *
 	 * @since    1.0.0
 	 */
-	function mwb_zndsk_init_steps() {
+
+	public function mwb_zndsk_init_steps() {
 		
 		update_option('mwb_zndsk_endpoint', "zndskwoo");
 		update_option('mwb_zndsk_mobiapi', "zndskwoo");
@@ -58,10 +69,11 @@ class MWB_ZENDESK_connect_api{
 	 *
 	 * @since    1.0.0
 	 */
-	function mwb_zndsk_register_routes(){
+
+	public function mwb_zndsk_register_routes(){
 		
 		$is_zndsk_enabled = get_option("mwb_zndsk_settings")['general'];
 		
-		$this->mwb_zendeskconnect_Manager->mwb_zndsk_register_routes();
+		$this->mwb_zendeskconnect_manager->mwb_zndsk_register_routes();
 	} 
 }
