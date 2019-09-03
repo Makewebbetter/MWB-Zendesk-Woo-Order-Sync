@@ -9,10 +9,10 @@
 *
 * @link https://makewebbetter.com/
 * @since 1.0.0
-* @package zendesk-woocommerce-order-sync
+* @package mwb-zendesk-woo-order-sync
 *
 * @wordpress-plugin
-* Plugin Name: Zendesk Woocommerce Order Sync
+* Plugin Name: MWB Zendesk Woo Order Sync
 * Plugin URI: https://makewebbetter.com/product/zendesk-woocommerce-order-sync
 * Description: Sends your WooCommerce order details to your Zendesk account.
 * Version: 1.0.0

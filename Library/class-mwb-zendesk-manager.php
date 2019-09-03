@@ -12,8 +12,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @link       https://makewebbbetter.com/
  * @since      1.0.0
  *
- * @package    zendesk-woocommerce-order-sync
- * @subpackage zendesk-woocommerce-order-sync/Library
+ * @package    mwb-zendesk-woo-order-sync
+ * @subpackage mwb-zendesk-woo-order-sync/Library
  */
 
 if ( ! class_exists ( 'MWB_ZENDESK_Manager' ) ) {
@@ -23,8 +23,8 @@ if ( ! class_exists ( 'MWB_ZENDESK_Manager' ) ) {
 	* @link       https://makewebbbetter.com/
 	* @since      1.0.0
 	*
-	* @package    zendesk-woocommerce-order-sync
-	* @subpackage zendesk-woocommerce-order-sync/Library
+	* @package    mwb-zendesk-woo-order-sync
+	* @subpackage mwb-zendesk-woo-order-sync/Library
 	*/
 	
 	class MWB_ZENDESK_Manager{

@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @link       https://makewebbetter.com/
  * @since      1.0.0
- * @package    zendesk-woocommerce-order-sync
+ * @package    mwb-zendesk-woo-order-sync
  */
 
 include_once MWB_ZENDESK_DIR.'/Library/class-mwb-zendesk-manager.php';
@@ -21,7 +21,7 @@ include_once MWB_ZENDESK_DIR.'/Library/class-mwb-zendesk-manager.php';
  *
  * @link       https://makewebbetter.com/
  * @since      1.0.0
- * @package    zendesk-woocommerce-order-sync
+ * @package    mwb-zendesk-woo-order-sync
  * @author     MakeWebBetter <webmaster@makewebbetter.com>
  */
 
