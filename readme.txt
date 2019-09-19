@@ -58,5 +58,13 @@ The manual installation method involves downloading our MWB Zendesk Woo Order Sy
 
 == Changelog ==
 
+= 1.0.1 =
+* Minor bug fixes
+
 = 1.0.0 =
 * First version 
+
+== Upgrade Notice ==
+
+= 1.0.1 =
+* Minor bug fixes
