@@ -128,7 +128,7 @@ if ( ! class_exists ( 'MWB_ZENDESK_Manager' ) ) {
 						$order_data = $order->get_data();
 						$customer_name = $order_data['billing']['first_name'] ." ". $order_data['billing']['last_name'];
 
-						$data[] = array(
+						$data["order_fields"][] = array(
 							"customer_name" => $customer_name,
 							"order_id" => $order_data['id'],
 							"order_add1" => $order_data['billing']['address_1'],
@@ -141,12 +141,14 @@ if ( ! class_exists ( 'MWB_ZENDESK_Manager' ) ) {
 							"order_date_created" => $order_data['date_created']->date('Y-m-d H:i:s'),
 							"order_total" => $order_data['total'],
 							"order_status" => $order_data['status'],
-						);	
+						);
+
+						$data["custom_fields"][$order_data['id']] = "";
 					}				
 				}
 				else {
 
-					$data[] = array(
+					$data["order_fields"][] = array(
 						"message" => __("No orders found", "zndskwoo")
 					);
 				}
