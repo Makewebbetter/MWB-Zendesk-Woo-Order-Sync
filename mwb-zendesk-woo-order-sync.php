@@ -15,7 +15,7 @@
 * Plugin Name: MWB Zendesk Woo Order Sync
 * Plugin URI: https://makewebbetter.com/product/zendesk-woocommerce-order-sync
 * Description: Sends your WooCommerce order details to your Zendesk account.
-* Version: 1.0.0
+* Version: 1.0.1
 * Author: makewebbetter
 * Author URI: https://makewebbetter.com/
 * License: GPL-3.0+
@@ -107,6 +107,44 @@ if ( $activated ) {
 	}
 
 	add_action( 'plugins_loaded', 'mwb_zndsk_add_api_file_for_plugin' );
+	/**
+	 * Enqueue scripts and styles
+	 *
+	 * @since    1.0.0
+	 */
+
+	function mwb_zndsk_enqueue_script() {
+
+		wp_register_style('zndsk_scripts', MWB_ZENDESK_DIR_URL.'assets/zndsk-admin.css');
+		wp_enqueue_style('zndsk_scripts');
+		wp_register_script( 'zndsk_scripts', MWB_ZENDESK_DIR_URL.'assets/zndsk-admin.js');
+		wp_enqueue_script('zndsk_scripts');
+		wp_localize_script( 'zndsk_scripts', 'zndsk_ajax_object',
+            array( 'ajax_url' => admin_url( 'admin-ajax.php' ) ) );
+	}
+	add_action( 'admin_init', 'mwb_zndsk_enqueue_script' );
+	/**
+	 * Show plugin development notice
+	 *
+	 * @since    1.0.0
+	 */
+
+	function mwb_zndsk_admin_notice__success() {
+
+		$suggest_sent = get_option('zendesk_suggestions_sent');
+		$suggest_ignored = get_option('zendesk_suggestions_later');
+	    ?>
+	    <div class="notice notice-success mwb-zndsk-form-div" style="<?php echo ($suggest_sent=='1' || $suggest_ignored=='1') ? 'display: none;' : 'display: block;' ?>">
+	        <p><?php _e( 'Support the <b>MWB Zendesk Woo Order Sync</b> plugin development by sending us tracking data( we just want your Email Address and Name that too only once ).', 'zndskwoo' ); ?></p>
+	        <input type="button" class="button button-primary mwb-accept-button" name="mwb_accept_button" value="Accept">
+	        <input type="button" class="button mwb-reject-button" name="mwb_reject_button" value="Ignore">
+	    </div>
+		<div style="display: none;" class="loading-style-bg" id="zndsk_loader">
+			<img src="<?php echo MWB_ZENDESK_DIR_URL;?>assets/images/loader.gif">
+		</div>
+	    <?php
+	}
+	add_action( 'admin_notices', 'mwb_zndsk_admin_notice__success' );
 
 }
 

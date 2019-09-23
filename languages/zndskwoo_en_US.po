@@ -1,0 +1,35 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: MWB-Zendesk-Woo-Order-Sync1.0.1\n"
+"POT-Creation-Date: 2019-09-23 14:58+0530\n"
+"PO-Revision-Date: 2019-09-23 14:58+0530\n"
+"Last-Translator: \n"
+"Language-Team: makewebbetter\n"
+"Language: en_US\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.0.6\n"
+"X-Poedit-Basepath: ../../../../opt/lampp/htdocs/LatestWP/wordpress/wp-"
+"content/plugins/MWB-Zendesk-Woo-Order-Sync\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: _e;__;esc_html_e\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: Library/class-mwb-zendesk-manager.php:177
+msgid "No orders found"
+msgstr ""
+
+#: mwb-zendesk-woo-order-sync.php:138
+msgid ""
+"Support the <b>MWB Zendesk Woo Order Sync</b> plugin development by sending "
+"us tracking data( we just want your Email Address and Name that too only "
+"once )."
+msgstr ""
+
+#: mwb-zendesk-woo-order-sync.php:161
+msgid ""
+"Woocommerce is not activated, please activate woocommerce first to install "
+"and use zendesk woocommerce plugin."
+msgstr ""

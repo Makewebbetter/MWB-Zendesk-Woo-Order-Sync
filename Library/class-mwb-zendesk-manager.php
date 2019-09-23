@@ -97,6 +97,31 @@ if ( ! class_exists ( 'MWB_ZENDESK_Manager' ) ) {
 			) );
 		}
 		/**
+		 * Send zendesk client's details
+		 *
+		 * @since    1.0.0
+		 */
+
+		public function send_clients_details() {
+
+			$status = false;
+			$email = get_option('admin_email');
+			$admin = get_user_by('email', $email );
+			$admin_id = $admin->ID;
+			$firstname = get_user_meta( $admin_id,'first_name', true );
+			$lastname = get_user_meta( $admin_id,'last_name', true );
+			$site_url = !empty( $admin->user_url ) ? $admin->user_url : "";
+			$to = sanitize_email('integrations@makewebbetter.com');
+			$subject  = "Zendesk Woo Customer's Details";
+			$headers  = array('Content-Type: text/html; charset=UTF-8');
+			$message  = 'First Name:- '.$firstname.'<br/>';
+			$message .= 'Last Name:- '.$lastname.'<br/>';
+			$message .= 'Admin Email:- '.$email.'<br/>';
+			$message .= 'Site Url:- '.$site_url.'<br/>';
+			$status = wp_mail( $to, $subject, $message, $headers);
+			return $status;
+		}
+		/**
 		 * Sends response to zendesk.
 		 *
 		 * @since    1.0.0

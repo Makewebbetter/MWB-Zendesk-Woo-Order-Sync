@@ -51,6 +51,8 @@ class MWB_ZENDESK_Connect_Api{
 	public function __construct(){
 	
 		$this->mwb_zendeskconnect_manager = MWB_ZENDESK_Manager::get_instance();
+		add_action( 'wp_ajax_mwb_zndsk_suggest_accept', array( $this, 'mwb_zndsk_suggest_accept' ) );
+		add_action( 'wp_ajax_mwb_zndsk_suggest_later', array( $this, 'mwb_zndsk_suggest_later' ) );
 	}
 	/**
 	 * Registering routes.
@@ -61,5 +63,35 @@ class MWB_ZENDESK_Connect_Api{
 	public function mwb_zndsk_register_routes(){
 				
 		$this->mwb_zendeskconnect_manager->mwb_zndsk_register_routes();
+	}
+	/**
+	 * Save suggestion in DB
+	 *
+	 * @since    1.0.0
+	 */
+
+	public function mwb_zndsk_suggest_later() {
+
+		update_option( 'zendesk_suggestions_later', true );
+		return true;
+	}
+	/**
+	 * Check status of mail sent and save suggestion in DB
+	 *
+	 * @since    1.0.0
+	 */
+
+	public function mwb_zndsk_suggest_accept() {
+		$status = $this->mwb_zendeskconnect_manager->send_clients_details();
+		
+		if( $status ) {
+			update_option( 'zendesk_suggestions_sent', true );
+			echo "success";
+		}
+		else {
+			update_option( 'zendesk_suggestions_later', true);
+			echo "failure";
+		}
+		wp_die();
 	} 
 }
