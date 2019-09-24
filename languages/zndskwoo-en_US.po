@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: MWB-Zendesk-Woo-Order-Sync1.0.1\n"
-"POT-Creation-Date: 2019-09-23 14:58+0530\n"
-"PO-Revision-Date: 2019-09-23 14:58+0530\n"
+"POT-Creation-Date: 2019-09-24 12:21+0530\n"
+"PO-Revision-Date: 2019-09-24 12:22+0530\n"
 "Last-Translator: \n"
 "Language-Team: makewebbetter\n"
 "Language: en_US\n"
@@ -14,21 +14,32 @@ msgstr ""
 "content/plugins/MWB-Zendesk-Woo-Order-Sync\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-SourceCharset: UTF-8\n"
-"X-Poedit-KeywordsList: _e;__;esc_html_e\n"
+"X-Poedit-KeywordsList: __;esc_html_e;_e\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: Library/class-mwb-zendesk-manager.php:177
+#: Library/class-mwb-zendesk-manager.php:182
 msgid "No orders found"
 msgstr ""
 
-#: mwb-zendesk-woo-order-sync.php:138
-msgid ""
-"Support the <b>MWB Zendesk Woo Order Sync</b> plugin development by sending "
-"us tracking data( we just want your Email Address and Name that too only "
-"once )."
+#: mwb-zendesk-woo-order-sync.php:130
+msgid "Mail Sent Successfully."
 msgstr ""
 
-#: mwb-zendesk-woo-order-sync.php:161
+#: mwb-zendesk-woo-order-sync.php:131
+msgid "Mail not sent"
+msgstr ""
+
+#: mwb-zendesk-woo-order-sync.php:132
+msgid "Mail already sent"
+msgstr ""
+
+#: mwb-zendesk-woo-order-sync.php:148
+msgid ""
+"Support the MWB Zendesk Woo Order Sync plugin development by sending us "
+"tracking data( we just want your Email Address and Name that too only once )."
+msgstr ""
+
+#: mwb-zendesk-woo-order-sync.php:168
 msgid ""
 "Woocommerce is not activated, please activate woocommerce first to install "
 "and use zendesk woocommerce plugin."
