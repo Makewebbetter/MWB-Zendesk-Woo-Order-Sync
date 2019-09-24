@@ -35,20 +35,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 $activated = true;
-if ( function_exists( 'is_multisite' ) && is_multisite() ) {
 
-	include_once ABSPATH . 'wp-admin/includes/plugin.php';
+if ( ! in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
 
-	if ( ! is_plugin_active( 'woocommerce/woocommerce.php' ) ) {
-
-		$activated = false;
-	}
-} else {
-
-	if ( ! in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
-
-		$activated = false;
-	}
+	$activated = false;
 }
 /**
  * Check if WooCommerce is active
@@ -118,9 +108,9 @@ if ( $activated ) {
 	 */
 	function mwb_zndsk_enqueue_script() {
 
-		wp_register_style( 'zndsk_scripts', MWB_ZENDESK_DIR_URL . 'assets/zndsk-admin.css' );
+		wp_register_style( 'zndsk_scripts', MWB_ZENDESK_DIR_URL . 'assets/zndsk-admin.css', false, '1.0', 'all' );
 		wp_enqueue_style( 'zndsk_scripts' );
-		wp_register_script( 'zndsk_scripts', MWB_ZENDESK_DIR_URL . 'assets/zndsk-admin.js' );
+		wp_register_script( 'zndsk_scripts', MWB_ZENDESK_DIR_URL . 'assets/zndsk-admin.js', array( 'jquery' ), '1.0', true );
 		wp_enqueue_script( 'zndsk_scripts' );
 		wp_localize_script(
 			'zndsk_scripts', 'zndsk_ajax_object',
@@ -167,6 +157,9 @@ if ( $activated ) {
 			<div class="error notice is-dismissible">
 			<p><?php esc_html_e( 'Woocommerce is not activated, please activate woocommerce first to install and use zendesk woocommerce plugin.', 'zndskwoo' ); ?></p>
 			</div>
+			<style>
+			#message{display:none;}
+			</style>
 			<?php
 	}
 
@@ -179,10 +172,6 @@ if ( $activated ) {
 	function mwb_zndsk_plugin_deactivate() {
 
 		deactivate_plugins( plugin_basename( __FILE__ ) );
-
-		global $wp_rewrite;
-		$wp_rewrite->flush_rules();
-
 		add_action( 'admin_notices', 'mwb_zndsk_plugin_error_notice' );
 	}
 }

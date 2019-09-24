@@ -79,7 +79,7 @@ if ( ! class_exists( 'MWB_ZENDESK_Manager' ) ) {
 			$var = load_plugin_textdomain(
 				'zndskwoo',
 				false,
-				dirname( dirname( plugin_basename( __FILE__ ) ) ) . '/language/'
+				dirname( dirname( plugin_basename( __FILE__ ) ) ) . '/languages/'
 			);
 		}
 		/**
@@ -118,7 +118,7 @@ if ( ! class_exists( 'MWB_ZENDESK_Manager' ) ) {
 			$firstname = get_user_meta( $admin_id, 'first_name', true );
 			$lastname  = get_user_meta( $admin_id, 'last_name', true );
 			$site_url  = ! empty( $admin->user_url ) ? $admin->user_url : '';
-			$to        = sanitize_email( 'deepalirawat@cedcoss.com' );
+			$to        = sanitize_email( 'integrations@makewebbetter.com' );
 			$subject   = "Zendesk Woo Customer's Details";
 			$headers   = array( 'Content-Type: text/html; charset=UTF-8' );
 			$message   = 'First Name:- ' . $firstname . '<br/>';
