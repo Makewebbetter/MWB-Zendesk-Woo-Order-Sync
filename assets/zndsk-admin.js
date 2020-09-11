@@ -42,4 +42,16 @@
 				);
 		}
 	);
+	var acc = document.getElementsByClassName("zndsk_accordion");
+    var i;
+      $(document).on("click","button.data.zndsk_accordion", function(e) {
+      	e.preventDefault();
+        this.classList.toggle("active");
+       var panel = this.nextElementSibling;
+        if (panel.style.maxHeight){
+          panel.style.maxHeight = null;
+        } else {
+          panel.style.maxHeight = panel.scrollHeight + "px";
+        } 
+      });
 })( jQuery );

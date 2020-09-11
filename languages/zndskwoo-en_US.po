@@ -1,10 +1,10 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: MWB-Zendesk-Woo-Order-Sync1.0.1\n"
-"POT-Creation-Date: 2019-09-25 12:28+0530\n"
-"PO-Revision-Date: 2019-09-25 12:28+0530\n"
+"Project-Id-Version: MWB Zendesk Woo Order Sync v2.0\n"
+"POT-Creation-Date: 2020-09-11 19:27+0530\n"
+"PO-Revision-Date: 2020-09-11 19:27+0530\n"
 "Last-Translator: \n"
-"Language-Team: makewebbetter\n"
+"Language-Team: MakeWebBetter\n"
 "Language: en_US\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -13,33 +13,57 @@ msgstr ""
 "X-Poedit-Basepath: \n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-SourceCharset: UTF-8\n"
-"X-Poedit-KeywordsList: __;esc_html_e;_e\n"
+"X-Poedit-KeywordsList: esc_html_e;esc_html;__;_e\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: Library/class-mwb-zendesk-manager.php:182
+#: Library/class-mwb-zendesk-manager.php:194
 msgid "No orders found"
 msgstr ""
 
-#: mwb-zendesk-woo-order-sync.php:120
+#: Library/class-mwb-zendesk-settings.php:62
+msgid "Zendesk Account Settings"
+msgstr ""
+
+#: Library/class-mwb-zendesk-settings.php:91
+msgid "Invalid URL"
+msgstr ""
+
+#: Library/class-mwb-zendesk-settings.php:96
+msgid "Invalid Email"
+msgstr ""
+
+#: Library/class-mwb-zendesk-settings.php:100
+msgid "Hidden"
+msgstr ""
+
+#: Library/class-mwb-zendesk-settings.php:123
+msgid "Zendesk Tickets"
+msgstr ""
+
+#: Library/class-mwb-zendesk-settings.php:165
+msgid "No tickets found"
+msgstr ""
+
+#: mwb-zendesk-woo-order-sync.php:132
 msgid "Mail Sent Successfully."
 msgstr ""
 
-#: mwb-zendesk-woo-order-sync.php:121
+#: mwb-zendesk-woo-order-sync.php:133
 msgid "Mail not sent"
 msgstr ""
 
-#: mwb-zendesk-woo-order-sync.php:122
+#: mwb-zendesk-woo-order-sync.php:134
 msgid "Mail already sent"
 msgstr ""
 
-#: mwb-zendesk-woo-order-sync.php:138
+#: mwb-zendesk-woo-order-sync.php:150
 msgid ""
 "Support the MWB Zendesk Woo Order Sync plugin development by sending us "
 "tracking data( we just want your Email Address and Name that too only once )."
 msgstr ""
 
-#: mwb-zendesk-woo-order-sync.php:158
+#: mwb-zendesk-woo-order-sync.php:170
 msgid ""
-"Woocommerce is not activated, please activate woocommerce first to install "
-"and use zendesk woocommerce plugin."
+"WooCommerce is not activated, please activate WooCommerce first to install "
+"and use Order Sync with Zendesk for WooCommerce plugin."
 msgstr ""

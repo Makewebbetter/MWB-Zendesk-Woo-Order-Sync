@@ -58,6 +58,9 @@ if ( ! class_exists( 'MWB_ZENDESK_Manager' ) ) {
 		public function __construct() {
 
 			$this->mwb_zndsk_set_locale();
+			$this->mwb_load_dependecy();
+
+			add_action( 'admin_init', array( $this, 'mwb_zndsk_save_account_details' ) );
 		}
 		/**
 		 * Define the locale for this plugin for internationalization.
@@ -68,6 +71,15 @@ if ( ! class_exists( 'MWB_ZENDESK_Manager' ) ) {
 		private function mwb_zndsk_set_locale() {
 
 			$this->mwb_zndsk_load_plugin_textdomain();
+		}
+		/**
+		 * Load file dependency.
+		 *
+		 * @since    1.0.0
+		 * @access   private
+		 */
+		private function mwb_load_dependecy() {
+			require_once MWB_ZENDESK_DIR . '/Library/class-mwb-zendesk-settings.php';
 		}
 		/**
 		 * Load the plugin text domain for translation.
@@ -185,6 +197,170 @@ if ( ! class_exists( 'MWB_ZENDESK_Manager' ) ) {
 				$data = wp_json_encode( $data );
 				return $data;
 			}
+		}
+		/**
+		 * Saving zendesk account details.
+		 *
+		 * @since    1.0.0
+		 * @access   private
+		 */
+		public function mwb_zndsk_save_account_details() {
+
+			$nonce_value = ! empty( $_REQUEST['zndsk_secure_check'] ) ? wc_get_var( sanitize_text_field( wp_unslash( $_REQUEST['zndsk_secure_check'] ) ) ) : '';
+
+			if ( isset( $nonce_value ) && wp_verify_nonce( $nonce_value, 'zndsk_submit' ) ) {
+
+				if ( isset( $_POST['zndsk_setting_save_btn'] ) ) { // Input var okay.
+
+					if ( isset( $_POST['zndsk_setting_zendesk_user_email'] ) ) {
+						$email = sanitize_text_field( wp_unslash( $_POST['zndsk_setting_zendesk_user_email'] ) );// Input var okay.
+					}
+					if ( isset( $_POST['zndsk_setting_zendesk_url'] ) ) {
+						$website = sanitize_text_field( wp_unslash( $_POST['zndsk_setting_zendesk_url'] ) );// Input var okay.
+					}
+					if ( isset( $_POST['zndsk_setting_zendesk_pass'] ) ) {
+						$pass = sanitize_text_field( wp_unslash( $_POST['zndsk_setting_zendesk_pass'] ) );// Input var okay.
+					}
+
+					$emailerror   = '';
+					$websiteerror = '';
+
+					if ( ! filter_var( $email, FILTER_VALIDATE_EMAIL ) ) {
+						$emailerror = true;
+					}
+
+					if ( ! filter_var( $website, FILTER_VALIDATE_URL, FILTER_FLAG_HOST_REQUIRED ) ) {
+						$websiteerror = true;
+					}
+
+					update_option( 'zendesk_email_error', $emailerror );
+					update_option( 'zendesk_url_error', $websiteerror );
+
+					$zendesk_acc_details = array(
+						'acc_url'   => $website,
+						'acc_email' => $email,
+						'acc_pass'  => $pass,
+					);
+
+					if ( true == $emailerror || true == $websiteerror ) {
+
+						delete_option( 'mwb_zndsk_account_details' );
+					} else {
+						update_option( 'mwb_zndsk_account_details', $zendesk_acc_details );
+					}
+				}
+			}
+		}
+		/**
+		 * Getting email of contact from zendesk.
+		 *
+		 * @since    1.0.0
+		 * @access   private
+		 */
+		public function mwb_fetch_useremail() {
+			global $post;
+
+			$order = wc_get_order( $post->ID );
+
+			$zndsk_acc_details = get_option( 'mwb_zndsk_account_details' );
+
+			$url = $zndsk_acc_details['acc_url'] . '/api/v2/users/search.json?query=' . $order->get_billing_email();
+
+			$basic = base64_encode( $zndsk_acc_details['acc_email'] . ':' . $zndsk_acc_details['acc_pass'] );
+
+			$headers = array(
+				'Content-Type'  => 'application/json',
+				'Authorization' => 'Basic ' . $basic,
+			);
+
+			$response = wp_remote_get( $url, array(
+				'headers'   => $headers,
+				'sslverify' => false,
+			));
+
+			if ( is_wp_error( $response ) ) {
+				$status_code = $response->get_error_code();
+				$res_message = $response->get_error_message();
+			} else {
+				$status_code = wp_remote_retrieve_response_code( $response );
+				$res_message = wp_remote_retrieve_response_message( $response );
+			}
+
+			if ( 200 == $status_code ) {
+
+				$api_body = wp_remote_retrieve_body( $response );
+
+				if ( $api_body ) {
+					$api_body = json_decode( $api_body );
+				}
+			} else {
+				return;
+			}
+
+			$users = $api_body->users;
+
+			foreach ( $users as $key => $value ) {
+				if ( $value->email == $order->get_billing_email() ) {
+					$response = self::mwb_fetch_user_tickets( $value->id );
+					return $response;
+				}
+			}
+		}
+		/**
+		 * Getting user tickets from zendesk.
+		 *
+		 * @since    1.0.0
+		 * @param array $user_id   user id of contact.
+		 * @return array  $data      order details
+		 */
+		public function mwb_fetch_user_tickets( $user_id ) {
+
+			$zndsk_acc_details = get_option( 'mwb_zndsk_account_details' );
+
+			$url = $zndsk_acc_details['acc_url'] . '/api/v2/users/' . $user_id . '/tickets/requested.json';
+
+			$basic = base64_encode( $zndsk_acc_details['acc_email'] . ':' . $zndsk_acc_details['acc_pass'] );
+
+			$headers = array(
+				'Content-Type'  => 'application/json',
+				'Authorization' => 'Basic ' . $basic,
+			);
+
+			$response = wp_remote_get( $url, array(
+				'headers'   => $headers,
+				'sslverify' => false,
+			) );
+
+			if ( is_wp_error( $response ) ) {
+				$status_code = $response->get_error_code();
+				$res_message = $response->get_error_message();
+			} else {
+				$status_code = wp_remote_retrieve_response_code( $response );
+				$res_message = wp_remote_retrieve_response_message( $response );
+			}
+
+			if ( 200 == $status_code ) {
+
+				$api_body = wp_remote_retrieve_body( $response );
+
+				if ( $api_body ) {
+					$api_body = json_decode( $api_body );
+				}
+			}
+
+			$tickets       = $api_body->tickets;
+			$ticket_fields = array();
+			$count         = 0;
+			foreach ( $tickets as $key => $single_ticket ) {
+				$ticket_fields[] = array(
+					'id'          => $single_ticket->id,
+					'subject'     => $single_ticket->subject,
+					'description' => $single_ticket->description,
+					'status'      => $single_ticket->status,
+				);
+			}
+
+			return $ticket_fields;
 		}
 	}
 }

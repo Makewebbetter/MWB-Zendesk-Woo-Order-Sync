@@ -15,14 +15,14 @@
  * Plugin Name: Order Sync with Zendesk for WooCommerce
  * Plugin URI: https://wordpress.org/plugins/mwb-zendesk-woo-order-sync/
  * Description: Sends your WooCommerce order details to your Zendesk account.
- * Version: 1.0.1
+ * Version: 2.0
  * Author: makewebbetter
  * Author URI: https://makewebbetter.com/
  * License: GPL-3.0+
  * License URI: https://www.gnu.org/licenses/gpl-3.0.txt
  * Text Domain: zndskwoo
- * Tested up to: 5.2.2
- * WC tested up to: 3.7.0
+ * Tested up to: 5.5.1
+ * WC tested up to: 4.5.1
  * Domain Path: /languages
  */
 
@@ -65,6 +65,7 @@ if ( $activated ) {
 	}
 
 	register_activation_hook( __FILE__, 'mwb_zndsk_activation' );
+	register_deactivation_hook( __FILE__, 'mwb_zndsk_deactivation' );
 	add_action( 'wp_loaded', 'mwb_zndsk_activation' );
 	/**
 	 * Activation hook
@@ -74,6 +75,17 @@ if ( $activated ) {
 	function mwb_zndsk_activation() {
 
 		do_action( 'mwb_zndsk_init' );
+	}
+	/**
+	 * Deactivation hook
+	 *
+	 * @since    1.0.0
+	 */
+	function mwb_zndsk_deactivation() {
+
+		delete_option( 'mwb_zndsk_account_details' );
+		delete_option( 'zendesk_email_error' );
+		delete_option( 'zendesk_url_error' );
 	}
 	/**
 	 * Permission check
@@ -155,7 +167,7 @@ if ( $activated ) {
 	function mwb_zndsk_plugin_error_notice() {
 		?>
 			<div class="error notice is-dismissible">
-			<p><?php esc_html_e( 'Woocommerce is not activated, please activate woocommerce first to install and use zendesk woocommerce plugin.', 'zndskwoo' ); ?></p>
+			<p><?php esc_html_e( 'WooCommerce is not activated, please activate WooCommerce first to install and use Order Sync with Zendesk for WooCommerce plugin.', 'zndskwoo' ); ?></p>
 			</div>
 			<style>
 			#message{display:none;}
