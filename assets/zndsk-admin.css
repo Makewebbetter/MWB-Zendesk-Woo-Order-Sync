@@ -90,6 +90,18 @@ span[data-status="solved"] {
 	margin-left: 2px;
 }
 
+span[data-status="closed"] {
+	background: #87929D;
+	color: #ffffff;
+	padding: 2px 5px 3px 5px;
+	font-weight: 600;
+	display: inline;
+	white-space: nowrap;
+	position: relative;
+	border-radius: 4px;
+	margin-left: 2px;
+}
+
 span[data-status="new"] {
 	background: #FFB648;
 	color: #ffffff;

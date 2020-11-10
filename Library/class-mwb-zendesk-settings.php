@@ -87,17 +87,17 @@ if ( ! class_exists( 'MWB_ZENDESK_Settings' ) ) {
 							<tbody>
 								<tr>
 									<td class="zendesk-column zendesk-col-left  zendesk-url-column">Zendesk Url:-</td>
-									<td class="zendesk-column zendesk-col-right"><input type="text" class="setting_text" name="zndsk_setting_zendesk_url" value="<?php if ( $details['acc_url'] ) { echo esc_url( $details['acc_url'] ); } ?>"/></td>
+									<td class="zendesk-column zendesk-col-right"><input type="text" class="setting_text" name="zndsk_setting_zendesk_url" value="<?php if ( isset( $details['acc_url'] ) ) { echo esc_url( $details['acc_url'] ); } ?>"/></td>
 									<td class="zendesk-err-message zendesk-column"><span><?php if ( get_option( 'zendesk_url_error' ) ) { echo esc_html( __( 'Invalid URL', 'zndskwoo' ) ); } ?></span></td>
 								</tr>
 								<tr>
 									<td class="zendesk-column zendesk-col-left zendesk-email-column">Zendesk Admin Email:-</td>
-									<td class="zendesk-column zendesk-col-right"><input type="text" class="setting_text" name="zndsk_setting_zendesk_user_email" value="<?php if ( $details['acc_email'] ) { echo esc_html( $details['acc_email'] ); } ?>"/></td>
+									<td class="zendesk-column zendesk-col-right"><input type="text" class="setting_text" name="zndsk_setting_zendesk_user_email" value="<?php if ( isset( $details['acc_email'] ) ) { echo esc_html( $details['acc_email'] ); } ?>"/></td>
 									<td class="zendesk-err-message zendesk-column"><span><?php if ( get_option( 'zendesk_email_error' ) ) { echo esc_html( __( 'Invalid Email', 'zndskwoo' ) ); } ?></span></td>
 								</tr>
 								<tr>
 									<td class="zendesk-column zendesk-col-left zendesk-pass-column">Zendesk Password:-</td>
-									<td class="zendesk-column zendesk-col-right"><input type="password" class="setting_text" name="zndsk_setting_zendesk_pass" value="" placeholder="<?php if ( '' != $details['acc_pass'] ) { echo esc_html( __( 'Hidden', 'zndskwoo' ) ); } ?>"/></td>
+									<td class="zendesk-column zendesk-col-right"><input type="password" class="setting_text" name="zndsk_setting_zendesk_pass" value="" placeholder="<?php if ( isset( $details['acc_pass'] ) ) { echo esc_html( __( 'Hidden', 'zndskwoo' ) ); } ?>"/></td>
 								</tr>	
 								<tr>
 									<td colspan="2" class="zendesk-submit">

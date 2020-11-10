@@ -206,7 +206,15 @@ if ( ! class_exists( 'MWB_ZENDESK_Manager' ) ) {
 		 */
 		public function mwb_zndsk_save_account_details() {
 
-			$nonce_value = ! empty( $_REQUEST['zndsk_secure_check'] ) ? wc_get_var( sanitize_text_field( wp_unslash( $_REQUEST['zndsk_secure_check'] ) ) ) : '';
+			if( ! empty( $_REQUEST['zndsk_secure_check'] ) ) {
+
+				$sanitized_nonce = sanitize_text_field( wp_unslash( $_REQUEST['zndsk_secure_check'] ) );
+
+				$nonce_value = wc_get_var( $sanitized_nonce );
+			}
+			else {
+				$nonce_value = '';
+			}
 
 			if ( isset( $nonce_value ) && wp_verify_nonce( $nonce_value, 'zndsk_submit' ) ) {
 
@@ -257,7 +265,7 @@ if ( ! class_exists( 'MWB_ZENDESK_Manager' ) ) {
 		 * @since    1.0.0
 		 * @access   private
 		 */
-		public function mwb_fetch_useremail() {
+		public static function mwb_fetch_useremail() {
 			global $post;
 
 			$order = wc_get_order( $post->ID );
@@ -313,7 +321,7 @@ if ( ! class_exists( 'MWB_ZENDESK_Manager' ) ) {
 		 * @param array $user_id   user id of contact.
 		 * @return array  $data      order details
 		 */
-		public function mwb_fetch_user_tickets( $user_id ) {
+		public static function mwb_fetch_user_tickets( $user_id ) {
 
 			$zndsk_acc_details = get_option( 'mwb_zndsk_account_details' );
 
