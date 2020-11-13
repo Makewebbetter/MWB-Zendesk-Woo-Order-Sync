@@ -4,6 +4,7 @@ Donate link:  https://makewebbetter.com/
 Tags: 	ecommerce, woocommerce, wordpress, order details, zendesk, zendesk WooCommerce, new customer, WooCommerce orders, ticket details, custom action, order status
 Requires at least: 4.0
 Tested up to: 5.5.1
+Stable tag: 2.0.0
 WC requires at least: 3.0.0
 WC tested up to: 4.5.1
 Requires PHP: 5.6
@@ -71,5 +72,5 @@ The manual installation method involves downloading our Order Sync with Zendesk 
 
 = 1.0.1 =
 * Minor bug fixes
-= 2.0 =
+= 2.0.0 =
 * Two-way sync

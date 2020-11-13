@@ -15,7 +15,7 @@
  * Plugin Name: Order Sync with Zendesk for WooCommerce
  * Plugin URI: https://wordpress.org/plugins/mwb-zendesk-woo-order-sync/
  * Description: Sends your WooCommerce order details to your Zendesk account.
- * Version: 2.0
+ * Version: 2.0.0
  * Author: makewebbetter
  * Author URI: https://makewebbetter.com/
  * License: GPL-3.0+
@@ -120,9 +120,9 @@ if ( $activated ) {
 	 */
 	function mwb_zndsk_enqueue_script() {
 
-		wp_register_style( 'zndsk_scripts', MWB_ZENDESK_DIR_URL . 'assets/zndsk-admin.css', false, '1.0', 'all' );
+		wp_register_style( 'zndsk_scripts', MWB_ZENDESK_DIR_URL . 'assets/zndsk-admin.css', false, '2.0.0', 'all' );
 		wp_enqueue_style( 'zndsk_scripts' );
-		wp_register_script( 'zndsk_scripts', MWB_ZENDESK_DIR_URL . 'assets/zndsk-admin.js', array( 'jquery' ), '1.0', true );
+		wp_register_script( 'zndsk_scripts', MWB_ZENDESK_DIR_URL . 'assets/zndsk-admin.js', array( 'jquery' ), '2.0.0', true );
 		wp_enqueue_script( 'zndsk_scripts' );
 		wp_localize_script(
 			'zndsk_scripts', 'zndsk_ajax_object',
