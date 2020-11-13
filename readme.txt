@@ -59,7 +59,7 @@ The manual installation method involves downloading our Order Sync with Zendesk 
 
 == Changelog ==
 
-= 2.0 =
+= 2.0.0 =
 * Two-way sync
 
 = 1.0.1 =
