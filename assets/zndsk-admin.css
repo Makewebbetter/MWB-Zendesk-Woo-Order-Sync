@@ -1,0 +1,206 @@
+.mwb-reject-button{
+	background-color: #d3d3d3 !important;
+}
+#zndsk_loader.loading-style-bg img {
+	left: 0;
+	margin: 0 auto;
+	position: absolute;
+	right: 0;
+	top: 50%;
+	transform: translateY(-50%);
+	width: 100px;
+}
+#zndsk_loader.loading-style-bg {
+background-color: rgba(0, 0, 0, 0.65);
+bottom: 0;
+height: 100%;
+left: 0;
+position: fixed;
+right: 0;
+top: 0;
+width: 100%;
+z-index: 2147483647;
+}
+.zndsk_accordion {
+    background-color: #67C6F6;
+    color: #ffffff;
+    cursor: pointer;
+    padding: 12px;
+    width: 100%;
+    border: none;
+    text-align: left;
+    outline: none;
+    font-size: 14px;
+    font-weight: bold;
+    transition: 0.4s;
+}
+
+.zndsk_accordion.active, .zndsk_accordion:hover {
+	background-color: #007CBA;
+}
+
+.zndsk_panel {
+	background-color: #ffffff;
+	border: 1px solid #ddd;
+	border-top: none;
+	max-height: 0;
+	overflow: hidden;
+	padding: 0 18px;
+	transition: max-height 0.2s ease-out;
+	margin-top: 5px;
+}
+
+.zndsk_panel .head{
+	font-weight: 600;
+}
+
+span[data-status="open"] {
+	background: #E34F32;
+	color: #ffffff;
+	padding: 2px 5px 3px 5px;
+	font-weight: 600;
+	display: inline;
+	white-space: nowrap;
+	position: relative;
+	border-radius: 4px;
+	margin-left: 2px;
+}
+
+span[data-status="pending"] {
+	background: #3091EC;
+	color: #ffffff;
+	padding: 2px 5px 3px 5px;
+	font-weight: 600;
+	display: inline;
+	white-space: nowrap;
+	position: relative;
+	border-radius: 4px;
+	margin-left: 2px;
+}
+
+span[data-status="solved"] {
+	background: #87929D;
+	color: #ffffff;
+	padding: 2px 5px 3px 5px;
+	font-weight: 600;
+	display: inline;
+	white-space: nowrap;
+	position: relative;
+	border-radius: 4px;
+	margin-left: 2px;
+}
+
+span[data-status="closed"] {
+	background: #87929D;
+	color: #ffffff;
+	padding: 2px 5px 3px 5px;
+	font-weight: 600;
+	display: inline;
+	white-space: nowrap;
+	position: relative;
+	border-radius: 4px;
+	margin-left: 2px;
+}
+
+span[data-status="new"] {
+	background: #FFB648;
+	color: #ffffff;
+	padding: 2px 5px 3px 5px;
+	font-weight: 600;
+	display: inline;
+	white-space: nowrap;
+	position: relative;
+	border-radius: 4px;
+	margin-left: 2px;
+}
+.zendesk-column{
+	font-size: 16px;
+	color: #444444;
+}
+.setting_text {
+	width: 350px;
+}
+.zndsk_setting_ticket_wrapper h2 {
+    font-size: 30px;
+    margin: 45px 0;
+    line-height: 40px;
+}
+.zndsk_setting_ticket_wrapper .zendesk_submit {
+    padding-top: 40px;
+}
+.zndsk_setting_ticket_wrapper .button.button-primary {
+  background-color: #03363D; /* Green */
+  border: none;
+  color: white;
+  padding: 8px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 18px;
+}
+.zndsk_setting_ticket_wrapper .zendesk-submit {
+    padding-top: 40px;
+}
+.zndsk_setting_ticket_wrapper .zendesk-column {
+    padding-bottom: 20px;
+    font-size: 16px;
+}
+.zndsk_setting_ticket_wrapper .zendesk-col-left {
+    padding-right: 20px;
+    letter-spacing: 0.45px;
+    width: 40%;
+}
+.zndsk_setting_ticket_wrapper .zendesk-col-right{
+	width: 40%;
+}
+.zndsk_setting_ticket_wrapper .zendesk-err-message{
+	width: 20%;
+	padding-left: 20px;
+}
+.zndsk_setting_ticket_wrapper .zendesk-err-message span{
+	color: #D8000C;
+}
+
+.zndsk_setting_ticket_wrapper .zendesk-column input[type="date"],
+.zndsk_setting_ticket_wrapper input[type="datetime-local"], 
+.zndsk_setting_ticket_wrapper input[type="datetime"],
+.zndsk_setting_ticket_wrapper input[type="email"],
+.zndsk_setting_ticket_wrapper input[type="month"],
+.zndsk_setting_ticket_wrapper input[type="number"],
+.zndsk_setting_ticket_wrapper input[type="password"],
+.zndsk_setting_ticket_wrapper input[type="search"],
+.zndsk_setting_ticket_wrapper input[type="tel"],
+.zndsk_setting_ticket_wrapper input[type="text"],
+.zndsk_setting_ticket_wrapper input[type="time"], input[type="url"],
+.zndsk_setting_ticket_wrapper input[type="week"]{
+	display: inline-block;
+	padding: 8px 4px 8px 10px !important;
+	min-height: 40px;
+	height: auto;
+	border-radius: 3px;
+	box-shadow: none;
+	border: 1px solid #666;
+}
+.zndsk_panel {
+    display: flex;
+    flex-wrap: wrap;
+}
+.zendesk-status-left {
+    width: 50%;
+    flex: 0 0 50%;
+    padding-top: 2px;
+    padding-bottom: 2px;
+
+}
+.zendesk-status-right {
+    width: 50%;
+    flex: 0 0 50%;
+    padding-top: 2px;
+    padding-bottom: 2px;
+}
+.zendesk-status{
+	padding-top: 10px;
+}
+.zendesk-description{
+	padding-bottom: 10px;
+}
