@@ -22,7 +22,7 @@
  * License URI: https://www.gnu.org/licenses/gpl-3.0.txt
  * Text Domain: zndskwoo
  * Tested up to: 5.6
- * WC tested up to: 4.5.1
+ * WC tested up to: 4.8.0
  * Domain Path: /languages
  */
 
