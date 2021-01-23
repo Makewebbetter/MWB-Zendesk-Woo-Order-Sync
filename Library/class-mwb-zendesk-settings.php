@@ -98,6 +98,12 @@ if ( ! class_exists( 'MWB_ZENDESK_Settings' ) ) {
 								<tr>
 									<td class="zendesk-column zendesk-col-left zendesk-pass-column">Zendesk Password:-</td>
 									<td class="zendesk-column zendesk-col-right"><input type="password" class="setting_text" name="zndsk_setting_zendesk_pass" value="" placeholder="<?php if ( isset( $details['acc_pass'] ) ) { echo esc_html( __( 'Hidden', 'zndskwoo' ) ); } ?>"/></td>
+								</tr>
+								<tr>
+									<td class="zendesk-column zendesk-col-left zendesk-pass-column">Zendesk API Token:-</td>
+									<td class="zendesk-column zendesk-col-right"><input type="password" class="setting_text" name="zndsk_setting_zendesk_api_token" value="" placeholder="<?php if ( isset( $details['acc_api_token'] ) ) { echo esc_html( __( 'Hidden', 'zndskwoo' ) ); } ?>"/>
+										<p><a target="_blank" href="https://support.zendesk.com/hc/en-us/articles/226022787-Generating-a-new-API-token-">Generating a new API token &rarr;</a></p>
+									</td>
 								</tr>	
 								<tr>
 									<td colspan="2" class="zendesk-submit">

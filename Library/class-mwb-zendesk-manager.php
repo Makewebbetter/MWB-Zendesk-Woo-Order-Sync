@@ -159,12 +159,13 @@ if ( ! class_exists( 'MWB_ZENDESK_Manager' ) ) {
 
 				$total_orders = wc_get_orders(
 					array(
-						'numberposts' => 5,
+						'numberposts' => 100, // Fetch 100 latest Orders.
 						'email'       => $email,
 
 					)
 				);
-				if ( ! empty( $total_orders && isset( $total_orders ) ) ) {
+
+				if ( ! empty( $total_orders ) && is_array( $total_orders ) ) {
 					foreach ( $total_orders as $key => $single_order ) {
 
 						$order         = wc_get_order( $total_orders[ $key ]->id );
@@ -229,6 +230,9 @@ if ( ! class_exists( 'MWB_ZENDESK_Manager' ) ) {
 					if ( isset( $_POST['zndsk_setting_zendesk_pass'] ) ) {
 						$pass = sanitize_text_field( wp_unslash( $_POST['zndsk_setting_zendesk_pass'] ) );// Input var okay.
 					}
+					if ( ! empty( $_POST['zndsk_setting_zendesk_api_token'] ) ) {
+						$api_token = sanitize_text_field( wp_unslash( $_POST['zndsk_setting_zendesk_api_token'] ) );// Input var okay.
+					}
 
 					$emailerror   = '';
 					$websiteerror = '';
@@ -245,9 +249,10 @@ if ( ! class_exists( 'MWB_ZENDESK_Manager' ) ) {
 					update_option( 'zendesk_url_error', $websiteerror );
 
 					$zendesk_acc_details = array(
-						'acc_url'   => $website,
-						'acc_email' => $email,
-						'acc_pass'  => $pass,
+						'acc_url'  		=> $website,
+						'acc_email' 	=> $email,
+						'acc_pass'  	=> $pass,
+						'acc_api_token' => $api_token,
 					);
 
 					if ( true == $emailerror || true == $websiteerror ) {
@@ -274,7 +279,17 @@ if ( ! class_exists( 'MWB_ZENDESK_Manager' ) ) {
 
 			$url = $zndsk_acc_details['acc_url'] . '/api/v2/users/search.json?query=' . $order->get_billing_email();
 
-			$basic = base64_encode( $zndsk_acc_details['acc_email'] . ':' . $zndsk_acc_details['acc_pass'] );
+			if( ! empty( $zndsk_acc_details['acc_api_token'] ) ) {
+
+				$basic = base64_encode( $zndsk_acc_details['acc_email'] . '/token:' . $zndsk_acc_details['acc_api_token'] );
+			}
+
+			else {
+
+				$basic = base64_encode( $zndsk_acc_details['acc_email'] . ':' . $zndsk_acc_details['acc_pass'] );
+			}
+			
+			$basic = base64_encode( $zndsk_acc_details['acc_email'] . '/token:' . '5iMD55vgzv6hVbARTwoBRwEqyK2ITVpz8vDYdhek' );
 
 			$headers = array(
 				'Content-Type'  => 'application/json',
@@ -327,7 +342,15 @@ if ( ! class_exists( 'MWB_ZENDESK_Manager' ) ) {
 
 			$url = $zndsk_acc_details['acc_url'] . '/api/v2/users/' . $user_id . '/tickets/requested.json';
 
-			$basic = base64_encode( $zndsk_acc_details['acc_email'] . ':' . $zndsk_acc_details['acc_pass'] );
+			if( ! empty( $zndsk_acc_details['acc_api_token'] ) ) {
+
+				$basic = base64_encode( $zndsk_acc_details['acc_email'] . '/token:' . $zndsk_acc_details['acc_api_token'] );
+			}
+
+			else {
+
+				$basic = base64_encode( $zndsk_acc_details['acc_email'] . ':' . $zndsk_acc_details['acc_pass'] );
+			}
 
 			$headers = array(
 				'Content-Type'  => 'application/json',
