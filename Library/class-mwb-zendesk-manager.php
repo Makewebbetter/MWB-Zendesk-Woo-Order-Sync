@@ -270,7 +270,7 @@ if ( ! class_exists( 'MWB_ZENDESK_Manager' ) ) {
 
 			$zndsk_acc_details = get_option( 'mwb_zndsk_account_details' );
 
-			if( empty( $zndsk_acc_details['acc_email'] ) ) {
+			if( empty( $zndsk_acc_details['acc_email'] ) || empty( $zndsk_acc_details['acc_url'] ) ) {
 
 				return 'empty_zndsk_account_details';
 			}
@@ -346,6 +346,8 @@ if ( ! class_exists( 'MWB_ZENDESK_Manager' ) ) {
 			$zndsk_acc_details = get_option( 'mwb_zndsk_account_details' );
 
 			$url = $zndsk_acc_details['acc_url'] . '/api/v2/users/' . $user_id . '/tickets/requested.json';
+
+			$basic = '';
 
 			if( ! empty( $zndsk_acc_details['acc_api_token'] ) ) {
 

@@ -81,21 +81,21 @@ if ( ! class_exists( 'MWB_ZENDESK_Settings' ) ) {
 			?>
 			<div class="zndsk_setting_ticket_wrapper">
 				<div class="zndsk_setting_wrapper">
-					<h2>Zendesk Settings:</h2>
+					<h2>Zendesk Settings</h2>
 					<form action="" method="post">
 						<table class="zndsk_setting_table">
 							<tbody>
 								<tr>
-									<td class="zendesk-column zendesk-col-left  zendesk-url-column">Zendesk Url:-</td>
+									<td class="zendesk-column zendesk-col-left  zendesk-url-column"><strong>Zendesk Url</strong></td>
 									<td class="zendesk-column zendesk-col-right"><input type="text" class="setting_text" name="zndsk_setting_zendesk_url" value="<?php if ( isset( $details['acc_url'] ) ) { echo esc_url( $details['acc_url'] ); } ?>"/></td>
 									<td class="zendesk-err-message zendesk-column"><span><?php if ( get_option( 'zendesk_url_error' ) ) { echo esc_html( __( 'Invalid URL', 'zndskwoo' ) ); } ?></span></td>
 								</tr>
 								<tr>
-									<td class="zendesk-column zendesk-col-left zendesk-email-column">Zendesk Admin Email:-</td>
+									<td class="zendesk-column zendesk-col-left zendesk-email-column"><strong>Zendesk Admin Email</strong></td>
 									<td class="zendesk-column zendesk-col-right"><input type="text" class="setting_text" name="zndsk_setting_zendesk_user_email" value="<?php if ( isset( $details['acc_email'] ) ) { echo esc_html( $details['acc_email'] ); } ?>"/></td>
 									<td class="zendesk-err-message zendesk-column"><span><?php if ( get_option( 'zendesk_email_error' ) ) { echo esc_html( __( 'Invalid Email', 'zndskwoo' ) ); } ?></span></td>
 								</tr>
-									<td class="zendesk-column zendesk-col-left zendesk-pass-column">Zendesk API Token:-</td>
+									<td class="zendesk-column zendesk-col-left zendesk-pass-column"><strong>Zendesk API Token</strong></td>
 									<td class="zendesk-column zendesk-col-right"><input type="password" class="setting_text" name="zndsk_setting_zendesk_api_token" value="" placeholder="<?php if ( ! empty( $details['acc_api_token'] ) ) { echo esc_html( __( 'Hidden', 'zndskwoo' ) ); } ?>"/>
 										<p><a target="_blank" href="https://support.zendesk.com/hc/en-us/articles/226022787-Generating-a-new-API-token-">Generating a new API token &rarr;</a></p>
 									</td>
