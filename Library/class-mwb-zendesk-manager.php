@@ -227,12 +227,8 @@ if ( ! class_exists( 'MWB_ZENDESK_Manager' ) ) {
 					if ( isset( $_POST['zndsk_setting_zendesk_url'] ) ) {
 						$website = sanitize_text_field( wp_unslash( $_POST['zndsk_setting_zendesk_url'] ) );// Input var okay.
 					}
-					if ( isset( $_POST['zndsk_setting_zendesk_pass'] ) ) {
-						$pass = sanitize_text_field( wp_unslash( $_POST['zndsk_setting_zendesk_pass'] ) );// Input var okay.
-					}
-					if ( ! empty( $_POST['zndsk_setting_zendesk_api_token'] ) ) {
-						$api_token = sanitize_text_field( wp_unslash( $_POST['zndsk_setting_zendesk_api_token'] ) );// Input var okay.
-					}
+					
+					$api_token = ! empty( $_POST['zndsk_setting_zendesk_api_token'] ) ? sanitize_text_field( wp_unslash( $_POST['zndsk_setting_zendesk_api_token'] ) ) : ''; // Input var okay.
 
 					$emailerror   = '';
 					$websiteerror = '';
@@ -251,7 +247,6 @@ if ( ! class_exists( 'MWB_ZENDESK_Manager' ) ) {
 					$zendesk_acc_details = array(
 						'acc_url'  		=> $website,
 						'acc_email' 	=> $email,
-						'acc_pass'  	=> $pass,
 						'acc_api_token' => $api_token,
 					);
 
@@ -273,20 +268,32 @@ if ( ! class_exists( 'MWB_ZENDESK_Manager' ) ) {
 		public static function mwb_fetch_useremail() {
 			global $post;
 
-			$order = wc_get_order( $post->ID );
-
 			$zndsk_acc_details = get_option( 'mwb_zndsk_account_details' );
 
+			if( empty( $zndsk_acc_details['acc_email'] ) ) {
+
+				return 'empty_zndsk_account_details';
+			}
+
+			$order = wc_get_order( $post->ID );
+
 			$url = $zndsk_acc_details['acc_url'] . '/api/v2/users/search.json?query=' . $order->get_billing_email();
+
+			$basic = '';
 
 			if( ! empty( $zndsk_acc_details['acc_api_token'] ) ) {
 
 				$basic = base64_encode( $zndsk_acc_details['acc_email'] . '/token:' . $zndsk_acc_details['acc_api_token'] );
 			}
 
-			else {
+			else if( ! empty( $zndsk_acc_details['acc_pass'] ) ) {
 
 				$basic = base64_encode( $zndsk_acc_details['acc_email'] . ':' . $zndsk_acc_details['acc_pass'] );
+			}
+
+			else {
+
+				return 'empty_zndsk_account_details';
 			}
 			
 			$headers = array(
@@ -315,7 +322,7 @@ if ( ! class_exists( 'MWB_ZENDESK_Manager' ) ) {
 					$api_body = json_decode( $api_body );
 				}
 			} else {
-				return;
+				return 'zndsk_api_error';
 			}
 
 			$users = $api_body->users;
@@ -345,7 +352,7 @@ if ( ! class_exists( 'MWB_ZENDESK_Manager' ) ) {
 				$basic = base64_encode( $zndsk_acc_details['acc_email'] . '/token:' . $zndsk_acc_details['acc_api_token'] );
 			}
 
-			else {
+			else if( ! empty( $zndsk_acc_details['acc_pass'] ) ) {
 
 				$basic = base64_encode( $zndsk_acc_details['acc_email'] . ':' . $zndsk_acc_details['acc_pass'] );
 			}

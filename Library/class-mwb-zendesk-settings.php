@@ -95,13 +95,8 @@ if ( ! class_exists( 'MWB_ZENDESK_Settings' ) ) {
 									<td class="zendesk-column zendesk-col-right"><input type="text" class="setting_text" name="zndsk_setting_zendesk_user_email" value="<?php if ( isset( $details['acc_email'] ) ) { echo esc_html( $details['acc_email'] ); } ?>"/></td>
 									<td class="zendesk-err-message zendesk-column"><span><?php if ( get_option( 'zendesk_email_error' ) ) { echo esc_html( __( 'Invalid Email', 'zndskwoo' ) ); } ?></span></td>
 								</tr>
-								<tr>
-									<td class="zendesk-column zendesk-col-left zendesk-pass-column">Zendesk Password:-</td>
-									<td class="zendesk-column zendesk-col-right"><input type="password" class="setting_text" name="zndsk_setting_zendesk_pass" value="" placeholder="<?php if ( isset( $details['acc_pass'] ) ) { echo esc_html( __( 'Hidden', 'zndskwoo' ) ); } ?>"/></td>
-								</tr>
-								<tr>
 									<td class="zendesk-column zendesk-col-left zendesk-pass-column">Zendesk API Token:-</td>
-									<td class="zendesk-column zendesk-col-right"><input type="password" class="setting_text" name="zndsk_setting_zendesk_api_token" value="" placeholder="<?php if ( isset( $details['acc_api_token'] ) ) { echo esc_html( __( 'Hidden', 'zndskwoo' ) ); } ?>"/>
+									<td class="zendesk-column zendesk-col-right"><input type="password" class="setting_text" name="zndsk_setting_zendesk_api_token" value="" placeholder="<?php if ( ! empty( $details['acc_api_token'] ) ) { echo esc_html( __( 'Hidden', 'zndskwoo' ) ); } ?>"/>
 										<p><a target="_blank" href="https://support.zendesk.com/hc/en-us/articles/226022787-Generating-a-new-API-token-">Generating a new API token &rarr;</a></p>
 									</td>
 								</tr>	
@@ -137,6 +132,28 @@ if ( ! class_exists( 'MWB_ZENDESK_Settings' ) ) {
 		public function mwb_zndsk_tickets_config() {
 
 			$tickets = MWB_ZENDESK_Manager::mwb_fetch_useremail();
+
+			if ( ! empty( $tickets ) && 'empty_zndsk_account_details' == $tickets ) {
+
+				?>
+					<div style="display:block;">
+						<span><?php echo esc_html_e( 'Please Setup Zendesk Account details.', 'zndskwoo' ); ?></span>
+					</div>
+				<?php
+
+				return;
+			}
+
+			if ( ! empty( $tickets ) && 'zndsk_api_error' == $tickets ) {
+
+				?>
+					<div style="display:block;">
+						<span><?php echo esc_html_e( 'Zendesk API Error. Please enter correct details or contact MakeWebBetter support.', 'zndskwoo' ); ?></span>
+					</div>
+				<?php
+
+				return;
+			}
 
 			if ( ! empty( $tickets ) && is_array( $tickets ) ) {
 
