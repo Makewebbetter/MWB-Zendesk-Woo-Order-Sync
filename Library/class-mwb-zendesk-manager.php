@@ -289,8 +289,6 @@ if ( ! class_exists( 'MWB_ZENDESK_Manager' ) ) {
 				$basic = base64_encode( $zndsk_acc_details['acc_email'] . ':' . $zndsk_acc_details['acc_pass'] );
 			}
 			
-			$basic = base64_encode( $zndsk_acc_details['acc_email'] . '/token:' . '5iMD55vgzv6hVbARTwoBRwEqyK2ITVpz8vDYdhek' );
-
 			$headers = array(
 				'Content-Type'  => 'application/json',
 				'Authorization' => 'Basic ' . $basic,
