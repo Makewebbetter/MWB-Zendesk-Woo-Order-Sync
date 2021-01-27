@@ -153,7 +153,7 @@ if ( ! class_exists( 'MWB_ZENDESK_Manager' ) ) {
 
 			$response = array();
 
-			$email = $post_params['email'];
+			$email = sanitize_text_field( wp_unslash( $post_params['email'] ) );
 
 			if ( isset( $email ) && ! empty( $email ) ) {
 
@@ -168,7 +168,7 @@ if ( ! class_exists( 'MWB_ZENDESK_Manager' ) ) {
 				if ( ! empty( $total_orders ) && is_array( $total_orders ) ) {
 					foreach ( $total_orders as $key => $single_order ) {
 
-						$order         = wc_get_order( $total_orders[ $key ]->id );
+						$order         = wc_get_order( $single_order->get_id() );
 						$order_data    = $order->get_data();
 						$customer_name = $order_data['billing']['first_name'] . ' ' . $order_data['billing']['last_name'];
 
