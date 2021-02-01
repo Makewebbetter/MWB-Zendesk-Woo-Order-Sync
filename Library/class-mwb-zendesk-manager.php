@@ -80,6 +80,7 @@ if ( ! class_exists( 'MWB_ZENDESK_Manager' ) ) {
 		 */
 		private function mwb_load_dependecy() {
 			require_once MWB_ZENDESK_DIR . '/Library/class-mwb-zendesk-settings.php';
+			require_once MWB_ZENDESK_DIR . '/Library/class-mwb-zendesk-global-functions.php';
 		}
 		/**
 		 * Load the plugin text domain for translation.
@@ -153,13 +154,20 @@ if ( ! class_exists( 'MWB_ZENDESK_Manager' ) ) {
 
 			$response = array();
 
-			$email = sanitize_text_field( wp_unslash( $post_params['email'] ) );
+			$email = ! empty( $post_params['email'] ) ? sanitize_text_field( wp_unslash( $post_params['email'] ) ) : '';
 
-			if ( isset( $email ) && ! empty( $email ) ) {
+			if ( ! empty( $email ) ) {
+
+				$order_config_options = get_option( 'mwb_zndsk_order_config_options', array() );
+
+				$latest_orders_count = ! empty( $order_config_options['latest_orders_count'] ) ? $order_config_options['latest_orders_count'] : '20';
+
+				$default_selected_fields = array( 'order_date', 'payment_method', 'order_total' );
+				$selected_source_fields = ! empty( $order_config_options['selected_source_fields'] ) ? $order_config_options['selected_source_fields'] : $default_selected_fields;
 
 				$total_orders = wc_get_orders(
 					array(
-						'numberposts' => 100, // Fetch 100 latest Orders.
+						'numberposts' => $latest_orders_count,
 						'email'       => $email,
 
 					)

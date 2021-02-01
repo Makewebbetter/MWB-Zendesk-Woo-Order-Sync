@@ -64,6 +64,10 @@ if ( $activated ) {
 		define( 'MWB_ZENDESK_DIR_PATH', plugin_dir_path( __FILE__ ) );
 	}
 
+	if ( ! defined( 'MWB_ZENDESK_VERSION' ) ) {
+		define( 'MWB_ZENDESK_VERSION', '2.0.1' );
+	}
+
 	register_activation_hook( __FILE__, 'mwb_zndsk_activation' );
 	register_deactivation_hook( __FILE__, 'mwb_zndsk_deactivation' );
 	add_action( 'wp_loaded', 'mwb_zndsk_activation' );
@@ -120,22 +124,32 @@ if ( $activated ) {
 	 */
 	function mwb_zndsk_enqueue_script() {
 
-		wp_register_style( 'zndsk_scripts', MWB_ZENDESK_DIR_URL . 'assets/zndsk-admin.css', false, '2.0.1', 'all' );
-		wp_enqueue_style( 'zndsk_scripts' );
-		wp_register_script( 'zndsk_scripts', MWB_ZENDESK_DIR_URL . 'assets/zndsk-admin.js', array( 'jquery' ), '2.0.1', true );
-		wp_enqueue_script( 'zndsk_scripts' );
-		wp_localize_script(
-			'zndsk_scripts', 'zndsk_ajax_object',
-			array(
-				'ajax_url'             => admin_url( 'admin-ajax.php' ),
-				'zndskSecurity'        => wp_create_nonce( 'zndsk_security' ),
-				'zndskMailSuccess'     => __( 'Mail Sent Successfully.', 'zndskwoo' ),
-				'zndskMailFailure'     => __( 'Mail not sent', 'zndskwoo' ),
-				'zndskMailAlreadySent' => __( 'Mail already sent', 'zndskwoo' ),
-			)
+		$screen = get_current_screen();
+
+		$valid_screens = array(
+			'toplevel_page_mwb-zendesk-settings',
+			'zendesk-account-settings_page_mwb-zendesk-order-config',
 		);
+
+		if( ! empty( $screen->id ) && in_array( $screen->id, $valid_screens ) ) {
+
+			wp_enqueue_style( 'mwb-zndsk-admin-style', MWB_ZENDESK_DIR_URL . 'assets/zndsk-admin.css', false, MWB_ZENDESK_VERSION, 'all' );
+
+			wp_enqueue_script( 'mwb-zndsk-admin-script', MWB_ZENDESK_DIR_URL . 'assets/zndsk-admin.js', array( 'jquery' , 'jquery-ui-draggable', 'jquery-ui-droppable' ), MWB_ZENDESK_VERSION, true );
+			
+			wp_localize_script(
+				'mwb-zndsk-admin-script', 'zndsk_ajax_object',
+				array(
+					'ajax_url'             => admin_url( 'admin-ajax.php' ),
+					'zndskSecurity'        => wp_create_nonce( 'zndsk_security' ),
+					'zndskMailSuccess'     => __( 'Mail Sent Successfully.', 'zndskwoo' ),
+					'zndskMailFailure'     => __( 'Mail not sent', 'zndskwoo' ),
+					'zndskMailAlreadySent' => __( 'Mail already sent', 'zndskwoo' ),
+				)
+			);
+		}
 	}
-	add_action( 'admin_init', 'mwb_zndsk_enqueue_script' );
+	add_action( 'admin_enqueue_scripts', 'mwb_zndsk_enqueue_script' );
 	/**
 	 * Show plugin development notice
 	 *

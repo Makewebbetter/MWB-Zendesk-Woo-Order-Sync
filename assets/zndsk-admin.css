@@ -204,3 +204,109 @@ span[data-status="new"] {
 .zendesk-description{
 	padding-bottom: 10px;
 }
+
+.mwb-zndsk-order-config-options .zndsk_setting_table {
+    width: 80%;
+}
+
+.mwb-zndsk-order-config-options .zendesk-col-left {
+    width: 20%;
+}
+.mwb-zndsk-order-config-options .zendesk-col-right {
+    width: 60%;
+}
+
+/*Drag and Drop CSS - start*/
+
+.mwb-zndsk-clearfix::after {
+    clear: both;
+    content: "";
+    display: block;
+}
+.mwb-zndsk-order-config-fields__drag-drop {
+    margin-top: 30px;
+    margin-bottom: 30px;
+    position: relative;
+}
+.mwb-zndsk-switch-icon {
+    display: block;
+    left: 47.5%;
+    max-width: 40px;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.draggable1
+  {
+    height: 20px;
+    width: 150px;
+    margin: 2px;
+}
+
+.dropped
+{
+    position: static !important;
+}
+
+#mwb-zndsk-dvsource, #mwb-zndsk-dvdest {
+    border: 5px solid #ccc;
+    padding: 5px;
+    min-height: 100px;
+    width: 430px;
+}
+
+.mwb-zndsk-order-config-fields__drag ul, .mwb-zndsk-order-config-fields__drop ul {
+    width: 100% !important;
+}
+.mwb-zndsk-order-config-fields__drag ul ,.mwb-zndsk-order-config-fields__drop ul {
+    border: none !important;
+    margin: 0;
+    padding: 0 !important;
+}
+.mwb-zndsk-order-config-fields__drag, .mwb-zndsk-order-config-fields__drop {
+    background: #ffffff;
+    border: 4px double #ccc !important;
+    float: left;
+    max-height: 250px;
+    min-height: 250px;
+    overflow-y: auto;
+    width: 45%;
+}
+.mwb-zndsk-order-config-fields__drop {
+    float: right;
+}
+.mwb-zndsk-order-config-fields__drag ul, .mwb-zndsk-order-config-fields__drop ul {
+    width: 100% !important;
+}
+.mwb-zndsk-order-config-fields__drag ul ,.mwb-zndsk-order-config-fields__drop ul {
+    border: none !important;
+    margin: 0;
+    padding: 0 !important;
+}
+.mwb-zndsk-order-config-fields__drag ul li,.mwb-zndsk-order-config-fields__drop ul li {
+    background: #ffffff;
+    border: none !important;
+    border-bottom: 1px solid #ddd !important;
+    cursor: move;
+    margin: 0;
+    padding: 10px;
+}
+.mwb-zndsk-order-config-fields__drag-drop ul li:hover {
+    background: #ececec;
+}
+.mwb-zndsk-order-config-fields__drag ul .ui-draggable-dragging, .mwb-zndsk-order-config-fields__drop ul .ui-draggable-dragging {
+    z-index: 10;
+}
+.mwb-zndsk-order-config-fields__drag ul li,.mwb-zndsk-order-config-fields__drop ul li {
+    background: #ffffff;
+    border: none !important;
+    border-bottom: 1px solid #ddd !important;
+    cursor: move;
+    margin: 0;
+    padding: 10px;
+}
+.mwb-zndsk-order-config-fields__drag-drop ul li:hover {
+    background: #ececec;
+}
+/*Drag and Drop CSS - end*/

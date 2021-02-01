@@ -49,6 +49,9 @@ if ( ! class_exists( 'MWB_ZENDESK_Settings' ) ) {
 
 			add_action( 'admin_menu', array( $this, 'register_mwb_zndsk_menu_page' ) );
 			add_action( 'add_meta_boxes', array( $this, 'mwb_zndsk_add_meta_boxes' ) );
+
+			add_action( 'wp_ajax_mwb_zndsk_save_order_config_options', array( $this, 'save_order_config_options' ) );
+
 		}
 
 		/**
@@ -59,14 +62,18 @@ if ( ! class_exists( 'MWB_ZENDESK_Settings' ) ) {
 		public function register_mwb_zndsk_menu_page() {
 
 			add_menu_page(
-				__( 'Zendesk Account Settings', 'zndskwoo' ),
-				'Zendesk Account Settings',
+				esc_html__( 'Zendesk Account Settings', 'zndskwoo' ),
+				esc_html__( 'Zendesk Account Settings', 'zndskwoo' ),
 				'manage_options',
-				'zendesk_settings',
+				'mwb-zendesk-settings',
 				array( $this, 'mwb_zndsk_settings' ),
-				'dashicons-admin-generic',
-				6
+				'dashicons-tickets-alt',
+				58
 			);
+
+			add_submenu_page( 'mwb-zendesk-settings', esc_html__( 'Order Configuration', 'zndskwoo' ), esc_html__( 'Order Configuration', 'zndskwoo' ), 'manage_options', 'mwb-zendesk-order-config', array( $this, 'mwb_zndsk_order_configuration_html' ) );
+
+
 		}
 		/**
 		 * Admin settings.
@@ -113,6 +120,17 @@ if ( ! class_exists( 'MWB_ZENDESK_Settings' ) ) {
 			</div>
 			<?php
 		}
+
+		/**
+		 * Order Configuration content.
+		 *
+		 * @since    2.0.2
+		 */
+		public function mwb_zndsk_order_configuration_html() {
+
+			include_once( MWB_ZENDESK_DIR_PATH . 'admin-templates/order-configuration.php' );
+		}
+
 		/**
 		 * Adding meta box for showing zendesk tickets.
 		 *
@@ -189,6 +207,29 @@ if ( ! class_exists( 'MWB_ZENDESK_Settings' ) ) {
 					</div>
 				<?php
 			}
+		}
+
+		/**
+		 * Save Zendesk Order Configuration options.
+		 *
+		 * @since    2.0.2
+		 */
+		public function save_order_config_options() {
+
+			check_ajax_referer( 'zndsk_security', 'zndskSecurity' );
+
+			$order_config_options = array();
+
+			$order_config_options['latest_orders_count'] =  ! empty( $_POST['latest_orders_count'] ) ? sanitize_text_field( wp_unslash( $_POST['latest_orders_count'] ) ) : '';
+
+			$order_config_options['source_fields'] = ! empty( $_POST['source_fields'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['source_fields'] ) ) : array() ;
+			$order_config_options['selected_source_fields'] = ! empty( $_POST['selected_source_fields'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['selected_source_fields'] ) ) : array() ;
+
+			// $selected_options_saved = update_option( 'mwb_zndsk_order_config_options', $order_config_options );
+
+			// echo json_encode( $selected_options_saved );
+
+			wp_die();
 		}
 	}
 }
