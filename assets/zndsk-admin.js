@@ -43,21 +43,45 @@
 		
 		// Drag and Drop initialization.
 
-		$('.mwb-zndsk-field-drag').draggable({
+		$('.mwb-zndsk-field-drag.kpi-fields').draggable({
 			cursor: "move",
 			revert: true,
 			distance: 50,
+			scope: 'kpi-fields-scope',
 			containment: "parent",
-			connectToSortable: "#dvdest",
+			connectToSortable: "#mwb-zndsk-kpi-fields-dvdest",
 			drop: function(event, ui) {
 				$(this).find('ul').append(ui.draggable);
 			}
 		});
 		
-		$('.mwb-zndsk-field-drop').droppable({
+		$('.mwb-zndsk-field-drop.kpi-fields').droppable({
 
 			hoverClass: "hoverDrop",
 			tolerance: "pointer",
+			scope: 'kpi-fields-scope',
+			drop: function(event, ui) {
+				$(this).append(ui.draggable);
+			}
+		});
+
+		$('.mwb-zndsk-field-drag.order-fields').draggable({
+			cursor: "move",
+			revert: true,
+			distance: 50,
+			scope: 'order-fields-scope',
+			containment: "parent",
+			connectToSortable: "#mwb-zndsk-order-fields-dvdest",
+			drop: function(event, ui) {
+				$(this).find('ul').append(ui.draggable);
+			}
+		});
+		
+		$('.mwb-zndsk-field-drop.order-fields').droppable({
+
+			hoverClass: "hoverDrop",
+			tolerance: "pointer",
+			scope: 'order-fields-scope',
 			drop: function(event, ui) {
 				$(this).append(ui.draggable);
 			}
@@ -65,54 +89,68 @@
 
 		// Order config options ajax handling.
 		var latest_orders_count = '';
-		var source_fields = [];
-		var selected_source_fields = [];
+		var source_kpi_fields = [];
+		var selected_kpi_fields = [];
+		var source_order_fields = [];
+		var selected_order_fields = [];
 
 		$(document).on( 'submit', '#mwb-zndsk-order-config-form', function(e){
 
 			e.preventDefault();
 
 			// Reinitialize array on every click.
-			source_fields = [];
-			selected_source_fields = [];
+			source_kpi_fields = [];
+			selected_kpi_fields = [];
+			source_order_fields = [];
+			selected_order_fields = [];
 
 			latest_orders_count = $('#mwb-zndsk-latest-orders-count').val();
 
-			$('#mwb-zndsk-dvsource li').each(function(i, li) {
-				source_fields.push( $(this).data('name') );
+			$('#mwb-zndsk-kpi-fields-dvsource li').each(function(i, li) {
+				source_kpi_fields.push( $(this).data('name') );
 			});
 			
-			$('#mwb-zndsk-dvdest li').each(function(i, li) {
-				selected_source_fields.push( $(this).data('name') );
+			$('#mwb-zndsk-kpi-fields-dvdest li').each(function(i, li) {
+				selected_kpi_fields.push( $(this).data('name') );
+			});
+
+			$('#mwb-zndsk-order-fields-dvsource li').each(function(i, li) {
+				source_order_fields.push( $(this).data('name') );
+			});
+			
+			$('#mwb-zndsk-order-fields-dvdest li').each(function(i, li) {
+				selected_order_fields.push( $(this).data('name') );
 			});
 
 			jQuery.post(ajaxUrl,{
 				action:'mwb_zndsk_save_order_config_options', 
 				latest_orders_count:latest_orders_count,
-				source_fields:source_fields,
-				selected_source_fields:selected_source_fields,
+				source_kpi_fields:source_kpi_fields,
+				selected_kpi_fields:selected_kpi_fields,
+				source_order_fields:source_order_fields,
+				selected_order_fields:selected_order_fields,
 				zndskSecurity:zndskSecurity
 			},
 			function(data){
 
-				// var selected_options_saved_html = '';
-				
-				// if( 'true' == data ) {
+				if( 'true' == data ) {
 
-				// 	selected_options_saved_html = "<p class='notice_text' >" + selected_options_saved_text + "</p>";
-				// }
+					$('.mwb-zndsk-order-config-notice.settings-saved').show();
+					$('.mwb-zndsk-order-config-notice.settings-not-saved').hide();
+				}
 
-				// else {
+				else {
 
-				// 	selected_options_saved_html = "<p class='notice_text' >" + selected_options_not_saved_text + "</p>";
-				// }
+					$('.mwb-zndsk-order-config-notice.settings-not-saved').show();
+					$('.mwb-zndsk-order-config-notice.settings-saved').hide();
+				}
 
-				// $('.arfw_notice').html( selected_options_saved_html );
-				// $('.notice_text').delay( 4000 ).fadeOut( 'slow' );
+				$('html, body').animate({
+			        scrollTop: 0
+			    }, 1000);
 				
 			});
 		});
-
 	});
 
 	var acc = document.getElementsByClassName("zndsk_accordion");

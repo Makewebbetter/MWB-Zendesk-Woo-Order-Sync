@@ -27,17 +27,23 @@ function mwb_zndskwoo_get_order_config_options() {
 
 	$latest_orders_count = ! empty( $order_config_options['latest_orders_count'] ) ? $order_config_options['latest_orders_count'] : '20';
 
-	$source_fields = ! empty( $order_config_options['source_fields'] ) ? $order_config_options['source_fields'] : array();
+	$source_order_fields = ! empty( $order_config_options['source_order_fields'] ) ? $order_config_options['source_order_fields'] : array();
+	$default_selected_order_fields = array( 'order_date_created', 'payment_method_title', 'total' );
+	$selected_order_fields = ! empty( $order_config_options['selected_order_fields'] ) ? $order_config_options['selected_order_fields'] : $default_selected_order_fields;
 
-	$default_selected_fields = array( 'order_date_created', 'payment_method_title', 'total' );
-	$selected_source_fields = ! empty( $order_config_options['selected_source_fields'] ) ? $order_config_options['selected_source_fields'] : $default_selected_fields;
+	$source_kpi_fields = ! empty( $order_config_options['source_kpi_fields'] ) ? $order_config_options['source_kpi_fields'] : array();
+	$default_selected_kpi_fields = array( 'average_order_value', 'total_spend', 'customer_lifetime_value' );
+	$selected_kpi_fields = ! empty( $order_config_options['selected_kpi_fields'] ) ? $order_config_options['selected_kpi_fields'] : $default_selected_kpi_fields;
 
 	$handled_order_config_options = array();
 
 	$handled_order_config_options['latest_orders_count'] = $latest_orders_count;
-	$handled_order_config_options['source_fields'] = $source_fields;
-	$handled_order_config_options['default_selected_fields'] = $default_selected_fields;
-	$handled_order_config_options['selected_source_fields'] = $selected_source_fields;
-
+	$handled_order_config_options['source_kpi_fields'] = $source_kpi_fields;
+	$handled_order_config_options['selected_kpi_fields'] = $selected_kpi_fields;
+	$handled_order_config_options['default_selected_kpi_fields'] = $default_selected_kpi_fields;
+	$handled_order_config_options['source_order_fields'] = $source_order_fields;
+	$handled_order_config_options['selected_order_fields'] = $selected_order_fields;
+	$handled_order_config_options['default_selected_order_fields'] = $default_selected_order_fields;
+	
 	return $handled_order_config_options;
 }

@@ -222,12 +222,15 @@ if ( ! class_exists( 'MWB_ZENDESK_Settings' ) ) {
 
 			$order_config_options['latest_orders_count'] =  ! empty( $_POST['latest_orders_count'] ) ? sanitize_text_field( wp_unslash( $_POST['latest_orders_count'] ) ) : '';
 
-			$order_config_options['source_fields'] = ! empty( $_POST['source_fields'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['source_fields'] ) ) : array() ;
-			$order_config_options['selected_source_fields'] = ! empty( $_POST['selected_source_fields'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['selected_source_fields'] ) ) : array() ;
+			$order_config_options['source_kpi_fields'] = ! empty( $_POST['source_kpi_fields'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['source_kpi_fields'] ) ) : array() ;
+			$order_config_options['selected_kpi_fields'] = ! empty( $_POST['selected_kpi_fields'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['selected_kpi_fields'] ) ) : array() ;
 
-			// $selected_options_saved = update_option( 'mwb_zndsk_order_config_options', $order_config_options );
+			$order_config_options['source_order_fields'] = ! empty( $_POST['source_order_fields'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['source_order_fields'] ) ) : array() ;
+			$order_config_options['selected_order_fields'] = ! empty( $_POST['selected_order_fields'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['selected_order_fields'] ) ) : array() ;
 
-			// echo json_encode( $selected_options_saved );
+			$selected_options_saved = update_option( 'mwb_zndsk_order_config_options', $order_config_options );
+
+			echo json_encode( $selected_options_saved );
 
 			wp_die();
 		}
