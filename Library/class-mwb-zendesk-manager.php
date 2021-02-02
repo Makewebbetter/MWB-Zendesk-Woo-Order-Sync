@@ -158,12 +158,9 @@ if ( ! class_exists( 'MWB_ZENDESK_Manager' ) ) {
 
 			if ( ! empty( $email ) ) {
 
-				$order_config_options = get_option( 'mwb_zndsk_order_config_options', array() );
-
-				$latest_orders_count = ! empty( $order_config_options['latest_orders_count'] ) ? $order_config_options['latest_orders_count'] : '20';
-
-				$default_selected_fields = array( 'order_date', 'payment_method', 'order_total' );
-				$selected_source_fields = ! empty( $order_config_options['selected_source_fields'] ) ? $order_config_options['selected_source_fields'] : $default_selected_fields;
+				$handled_order_config_options = mwb_zndskwoo_get_order_config_options();
+				
+				$latest_orders_count = $handled_order_config_options['latest_orders_count'];
 
 				$total_orders = wc_get_orders(
 					array(

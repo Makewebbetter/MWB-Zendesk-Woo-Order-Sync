@@ -127,8 +127,9 @@ if ( $activated ) {
 		$screen = get_current_screen();
 
 		$valid_screens = array(
-			'toplevel_page_mwb-zendesk-settings',
-			'zendesk-account-settings_page_mwb-zendesk-order-config',
+			'toplevel_page_mwb-zendesk-order-sync',
+			'zendesk-order-sync_page_mwb-zendesk-order-config',
+			'shop_order',
 		);
 
 		if( ! empty( $screen->id ) && in_array( $screen->id, $valid_screens ) ) {

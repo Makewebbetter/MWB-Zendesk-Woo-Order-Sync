@@ -19,60 +19,16 @@ $handled_order_config_options = mwb_zndskwoo_get_order_config_options();
 
 $latest_orders_count = $handled_order_config_options['latest_orders_count'];
 
-// KPI Fields - Start.
+// KPI Fields.
+$all_kpi_fields = mwb_zndskwoo_order_config_get_all_kpi_fields();
 $source_kpi_fields = $handled_order_config_options['source_kpi_fields'];
 $selected_kpi_fields = $handled_order_config_options['selected_kpi_fields'];
-$default_selected_kpi_fields = $handled_order_config_options['default_selected_kpi_fields'];
 
-$kpi_fields = array(); // All KPI Fields.
-
-$kpi_fields['average_order_value']         		     = esc_html__( 'Average Order Value', 'zndskwoo' );
-$kpi_fields['total_spend']         		     		 = esc_html__( 'Total Spend', 'zndskwoo' );
-$kpi_fields['customer_lifetime_value']         		 = esc_html__( 'Customer Lifetime Value', 'zndskwoo' );
-$kpi_fields['last_purchase']         		    	 = esc_html__( 'Last Purchase', 'zndskwoo' );
-$kpi_fields['first_purchase']         		     	 = esc_html__( 'First Purchase', 'zndskwoo' );
-$kpi_fields['average_days_bw_purchase']         	 = esc_html__( 'Average Days between Purchase', 'zndskwoo' );
-// KPI Fields - End.
-
-// Order Fields - Start.
+// Order Fields.
+$all_order_fields = mwb_zndskwoo_order_config_get_all_order_fields();
 $source_order_fields = $handled_order_config_options['source_order_fields'];
 $selected_order_fields = $handled_order_config_options['selected_order_fields'];
-$default_selected_order_fields = $handled_order_config_options['default_selected_order_fields'];
 
-$order_fields = array(); // All Order Fields.
-
-$order_fields['order_date_created']           	  	 = esc_html__( 'Order date', 'zndskwoo' );
-
-$order_fields['billing_customer_name']  		 	 = esc_html__( 'Billing Customer Name', 'zndskwoo' );
-$order_fields['billing_address_1']      		 	 = esc_html__( 'Billing Address 1', 'zndskwoo' );
-$order_fields['billing_address_2']      		 	 = esc_html__( 'Billing Address 2', 'zndskwoo' );
-$order_fields['billing_city']           		 	 = esc_html__( 'Billing City', 'zndskwoo' );
-$order_fields['billing_state']          		 	 = esc_html__( 'Billing State', 'zndskwoo' );
-$order_fields['billing_postcode']       		 	 = esc_html__( 'Billing Post Code', 'zndskwoo' );
-$order_fields['billing_country']        		 	 = esc_html__( 'Billing Country', 'zndskwoo' );
-$order_fields['billing_phone']          		 	 = esc_html__( 'Billing Phone', 'zndskwoo' );
-$order_fields['billing_company']        		 	 = esc_html__( 'Billing Company', 'zndskwoo' );
-
-$order_fields['shipping_customer_name'] 		 	 = esc_html__( 'Shipping Customer Name', 'zndskwoo' );
-$order_fields['shipping_address_1']     		 	 = esc_html__( 'Shipping Address 2', 'zndskwoo' );
-$order_fields['shipping_address_2']     		 	 = esc_html__( 'Shipping Address 1', 'zndskwoo' );
-$order_fields['shipping_city']          		 	 = esc_html__( 'Shipping City', 'zndskwoo' );
-$order_fields['shipping_state']         		 	 = esc_html__( 'Shipping State', 'zndskwoo' );
-$order_fields['shipping_postcode']      		 	 = esc_html__( 'Shipping Postcode', 'zndskwoo' );
-$order_fields['shipping_country']       		 	 = esc_html__( 'Shipping Country', 'zndskwoo' );
-$order_fields['shipping_company']       		 	 = esc_html__( 'Shipping Company', 'zndskwoo' );
-
-// Exact field keys from Order Data.
-$order_fields['payment_method_title']         		 = esc_html__( 'Payment Method', 'zndskwoo' );
-$order_fields['customer_ip_address']    		 	 = esc_html__( 'Customer IP Aaddress', 'zndskwoo' );
-$order_fields['currency']         			 		 = esc_html__( 'Currency', 'zndskwoo' );
-$order_fields['discount_total']          		 	 = esc_html__( 'Discount', 'zndskwoo' );
-$order_fields['discount_tax']      		 		 	 = esc_html__( 'Discount Tax', 'zndskwoo' );
-$order_fields['shipping_total']         		     = esc_html__( 'Shipping amount', 'zndskwoo' );
-$order_fields['shipping_tax']     		 			 = esc_html__( 'Shipping tax', 'zndskwoo' );
-$order_fields['total_tax']              		 	 = esc_html__( 'Order Tax', 'zndskwoo' );
-$order_fields['total']            		 		 	 = esc_html__( 'Order Total', 'zndskwoo' );
-// Order Fields - End.
 ?>
 
 <div class="zndsk_setting_ticket_wrapper">
@@ -109,22 +65,9 @@ $order_fields['total']            		 		 	 = esc_html__( 'Order Total', 'zndskwoo
 
 	                                if( ! empty( $source_kpi_fields ) && is_array( $source_kpi_fields ) ) {
 
-	                                    foreach ( $kpi_fields as $field_key => $field_name ) {
+	                                    foreach ( $all_kpi_fields as $field_key => $field_name ) {
 
 	                                        if( in_array( $field_key, $source_kpi_fields ) ) : ?>
-
-	                                        	<li class="mwb-zndsk-field-drag kpi-fields" data-name='<?php echo $field_key; ?>'><?php echo $field_name;?></li>
-
-	                                        <?php endif;
-	                                    }
-	                                }
-
-	                                // Show all fields ( except default selected fields ) initially when not saved.
-	                                elseif( empty( $selected_kpi_fields ) ) {
-
-	                                    foreach ( $kpi_fields as $field_key => $field_name ) {
-
-	                                        if( ! in_array( $field_key, $default_selected_kpi_fields ) ) : ?>
 
 	                                        	<li class="mwb-zndsk-field-drag kpi-fields" data-name='<?php echo $field_key; ?>'><?php echo $field_name;?></li>
 
@@ -143,7 +86,7 @@ $order_fields['total']            		 		 	 = esc_html__( 'Order Total', 'zndskwoo
 
 	                                if( ! empty( $selected_kpi_fields ) && is_array( $selected_kpi_fields ) ) {
 
-	                                    foreach ( $kpi_fields as $field_key => $field_name ) {
+	                                    foreach ( $all_kpi_fields as $field_key => $field_name ) {
 
 	                                        if( in_array( $field_key, $selected_kpi_fields ) ) : ?>
 
@@ -175,22 +118,9 @@ $order_fields['total']            		 		 	 = esc_html__( 'Order Total', 'zndskwoo
 
 	                                if( ! empty( $source_order_fields ) && is_array( $source_order_fields ) ) {
 
-	                                    foreach ( $order_fields as $field_key => $field_name ) {
+	                                    foreach ( $all_order_fields as $field_key => $field_name ) {
 
 	                                        if( in_array( $field_key, $source_order_fields ) ) : ?>
-
-	                                        	<li class="mwb-zndsk-field-drag order-fields" data-name='<?php echo $field_key; ?>'><?php echo $field_name;?></li>
-
-	                                        <?php endif;
-	                                    }
-	                                }
-
-	                                // Show all fields ( except default selected fields ) initially when not saved.
-	                               elseif( empty( $selected_order_fields ) ) {
-
-	                                    foreach ( $order_fields as $field_key => $field_name ) {
-
-	                                        if( ! in_array( $field_key, $default_selected_order_fields ) ) : ?>
 
 	                                        	<li class="mwb-zndsk-field-drag order-fields" data-name='<?php echo $field_key; ?>'><?php echo $field_name;?></li>
 
@@ -209,7 +139,7 @@ $order_fields['total']            		 		 	 = esc_html__( 'Order Total', 'zndskwoo
 
 	                                if( ! empty( $selected_order_fields ) && is_array( $selected_order_fields ) ) {
 
-	                                    foreach ( $order_fields as $field_key => $field_name ) {
+	                                    foreach ( $all_order_fields as $field_key => $field_name ) {
 
 	                                        if( in_array( $field_key, $selected_order_fields ) ) : ?>
 

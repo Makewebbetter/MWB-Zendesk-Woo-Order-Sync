@@ -62,16 +62,18 @@ if ( ! class_exists( 'MWB_ZENDESK_Settings' ) ) {
 		public function register_mwb_zndsk_menu_page() {
 
 			add_menu_page(
-				esc_html__( 'Zendesk Account Settings', 'zndskwoo' ),
-				esc_html__( 'Zendesk Account Settings', 'zndskwoo' ),
+				esc_html__( 'Zendesk Order Sync', 'zndskwoo' ),
+				esc_html__( 'Zendesk Order Sync', 'zndskwoo' ),
 				'manage_options',
-				'mwb-zendesk-settings',
-				array( $this, 'mwb_zndsk_settings' ),
+				'mwb-zendesk-order-sync',
+				array( $this, 'mwb_zndsk_account_settings' ),
 				'dashicons-tickets-alt',
 				58
 			);
 
-			add_submenu_page( 'mwb-zendesk-settings', esc_html__( 'Order Configuration', 'zndskwoo' ), esc_html__( 'Order Configuration', 'zndskwoo' ), 'manage_options', 'mwb-zendesk-order-config', array( $this, 'mwb_zndsk_order_configuration_html' ) );
+			add_submenu_page( 'mwb-zendesk-order-sync', esc_html__( 'Account Settings', 'zndskwoo' ), esc_html__( 'Account Settings', 'zndskwoo' ), 'manage_options', 'mwb-zendesk-order-sync' );
+
+			add_submenu_page( 'mwb-zendesk-order-sync', esc_html__( 'Order Configuration', 'zndskwoo' ), esc_html__( 'Order Configuration', 'zndskwoo' ), 'manage_options', 'mwb-zendesk-order-config', array( $this, 'mwb_zndsk_order_configuration_html' ) );
 
 
 		}
@@ -81,14 +83,14 @@ if ( ! class_exists( 'MWB_ZENDESK_Settings' ) ) {
 		 * @since    1.0.0
 		 * @access   private
 		 */
-		public function mwb_zndsk_settings() {
+		public function mwb_zndsk_account_settings() {
 
 			$details = get_option( 'mwb_zndsk_account_details', array() );
 
 			?>
 			<div class="zndsk_setting_ticket_wrapper">
 				<div class="zndsk_setting_wrapper">
-					<h2>Zendesk Settings</h2>
+					<h2><?php esc_html_e( __( 'Zendesk Account Settings', 'zndskwoo' ) ); ?></h2>
 					<form action="" method="post">
 						<table class="zndsk_setting_table">
 							<tbody>
