@@ -154,53 +154,22 @@ if ( ! class_exists( 'MWB_ZENDESK_Manager' ) ) {
 
 			$response = array();
 
-			$email = ! empty( $post_params['email'] ) ? sanitize_text_field( wp_unslash( $post_params['email'] ) ) : '';
+			$customer_email = ! empty( $post_params['email'] ) ? sanitize_text_field( wp_unslash( $post_params['email'] ) ) : '';
 
-			if ( ! empty( $email ) ) {
+			if ( ! empty( $customer_email ) ) {
 
 				$handled_order_config_options = mwb_zndskwoo_get_order_config_options();
+
+				$zendesk_order_config_data = array();
 				
-				$latest_orders_count = $handled_order_config_options['latest_orders_count'];
+				$kpi_fields = mwb_zndskwoo_get_customer_kpi_fields_for_zendesk( $customer_email, $handled_order_config_options );
+				$order_fields = mwb_zndskwoo_get_customer_order_fields_for_zendesk( $customer_email, $handled_order_config_options );
 
-				$total_orders = wc_get_orders(
-					array(
-						'numberposts' => $latest_orders_count,
-						'email'       => $email,
+				$zendesk_order_config_data['kpi_fields'] = ! empty( $kpi_fields ) ? $kpi_fields : esc_html__( 'No KPI data found', 'zndskwoo' );
+				$zendesk_order_config_data['order_fields'] = ! empty( $order_fields ) ? $order_fields : esc_html__( 'No Order data found', 'zndskwoo' );
 
-					)
-				);
-
-				if ( ! empty( $total_orders ) && is_array( $total_orders ) ) {
-					foreach ( $total_orders as $key => $single_order ) {
-
-						$order         = wc_get_order( $single_order->get_id() );
-						$order_data    = $order->get_data();
-						$customer_name = $order_data['billing']['first_name'] . ' ' . $order_data['billing']['last_name'];
-
-						$data['order_fields'][] = array(
-							'customer_name'      => $customer_name,
-							'order_id'           => $order_data['id'],
-							'order_add1'         => $order_data['billing']['address_1'],
-							'order_add2'         => $order_data['billing']['address_2'],
-							'city'               => $order_data['billing']['city'],
-							'state'              => $order_data['billing']['state'],
-							'postalcode'         => $order_data['billing']['postcode'],
-							'country'            => $order_data['billing']['country'],
-							'order_currency'     => $order_data['currency'],
-							'order_date_created' => $order_data['date_created']->date( 'Y-m-d H:i:s' ),
-							'order_total'        => $order_data['total'],
-							'order_status'       => $order_data['status'],
-						);
-
-						$data['custom_fields'][ $order_data['id'] ] = '';
-					}
-				} else {
-
-					$data['order_fields'][] = array(
-						'message' => __( 'No orders found', 'zndskwoo' ),
-					);
-				}
-				$data = wp_json_encode( $data );
+				$data = wp_json_encode( $zendesk_order_config_data );
+				
 				return $data;
 			}
 		}
