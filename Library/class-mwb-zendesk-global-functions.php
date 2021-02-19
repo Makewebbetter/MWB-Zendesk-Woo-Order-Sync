@@ -262,10 +262,6 @@ function mwb_zndskwoo_get_customer_kpi_fields_for_zendesk( $customer_email = '',
 		}
 	}
 
-	echo '<pre>';
-	print_r($zendesk_kpi_fields_array);
-	echo '</pre>';
-
 	return $zendesk_kpi_fields_array;
 
 	
@@ -555,10 +551,6 @@ function mwb_zndskwoo_get_customer_order_fields_for_zendesk( $customer_email = '
 			$zendesk_order_fields_array[] = $single_order_zendesk_data;
 		}
 	}
-
-	echo '<pre>';
-	print_r($zendesk_order_fields_array);
-	echo '</pre>';
 
 	return $zendesk_order_fields_array;
 }
