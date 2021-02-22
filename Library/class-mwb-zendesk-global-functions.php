@@ -316,7 +316,7 @@ function mwb_zndskwoo_get_customer_order_fields_for_zendesk( $customer_email = '
 			// Order Status.
 			$single_order_zendesk_data['order_status'] = array(
 				'title' => esc_html__( 'Order Status', 'zndskwoo' ),
-				'value' => $single_order_status
+				'value' => wc_get_order_status_name( $single_order_status )
 			);
 
 			// Order Date created.
