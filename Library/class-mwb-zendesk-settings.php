@@ -49,11 +49,9 @@ if ( ! class_exists( 'MWB_ZENDESK_Settings' ) ) {
 
 			add_action( 'admin_menu', array( $this, 'register_mwb_zndsk_menu_page' ) );
 			add_action( 'add_meta_boxes', array( $this, 'mwb_zndsk_add_meta_boxes' ) );
-
 			add_action( 'wp_ajax_mwb_zndsk_save_order_config_options', array( $this, 'save_order_config_options' ) );
 
 		}
-
 		/**
 		 * Create/Register menu items for the plugin.
 		 *
@@ -78,7 +76,7 @@ if ( ! class_exists( 'MWB_ZENDESK_Settings' ) ) {
 
 		}
 		/**
-		 * Admin settings.
+		 * Admin settings.api_body
 		 *
 		 * @since    1.0.0
 		 * @access   private
@@ -104,11 +102,12 @@ if ( ! class_exists( 'MWB_ZENDESK_Settings' ) ) {
 									<td class="zendesk-column zendesk-col-right"><input type="text" class="setting_text" name="zndsk_setting_zendesk_user_email" value="<?php if ( isset( $details['acc_email'] ) ) { echo esc_html( $details['acc_email'] ); } ?>"/></td>
 									<td class="zendesk-err-message zendesk-column"><span><?php if ( get_option( 'zendesk_email_error' ) ) { echo esc_html( __( 'Invalid Email', 'zndskwoo' ) ); } ?></span></td>
 								</tr>
+								<tr>
 									<td class="zendesk-column zendesk-col-left zendesk-pass-column"><strong>Zendesk API Token</strong></td>
 									<td class="zendesk-column zendesk-col-right"><input type="password" class="setting_text" name="zndsk_setting_zendesk_api_token" value="" placeholder="<?php if ( ! empty( $details['acc_api_token'] ) ) { echo esc_html( __( 'Hidden', 'zndskwoo' ) ); } ?>"/>
 										<p><a target="_blank" href="https://support.zendesk.com/hc/en-us/articles/226022787-Generating-a-new-API-token-">Generating a new API token &rarr;</a></p>
 									</td>
-								</tr>	
+								</tr>
 								<tr>
 									<td colspan="2" class="zendesk-submit">
 										<input type="submit" class="button button-primary" name="zndsk_setting_save_btn" value="Submit">

@@ -25,7 +25,7 @@
  * WC tested up to: 4.8.0
  * Domain Path: /languages
  */
-
+use Stripe\Issuing\Authorization;
 /**
  * Exit if accessed directly
  */
@@ -149,8 +149,18 @@ if ( $activated ) {
 				)
 			);
 		}
+		add_thickbox();
 	}
 	add_action( 'admin_enqueue_scripts', 'mwb_zndsk_enqueue_script' );
+	add_action( 'wp_enqueue_scripts', 'mwb_zndsk_ticket_script' );
+	/**
+	 * Add script function
+	 *
+	 * @return void
+	 */
+	function mwb_zndsk_ticket_script() {
+		wp_enqueue_script( 'mwb-zndsk-admin-script', MWB_ZENDESK_DIR_URL . 'assets/zndsk-ticket.js', false, MWB_ZENDESK_VERSION, 'all' );
+	}
 	/**
 	 * Show plugin development notice
 	 *

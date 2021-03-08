@@ -59,8 +59,77 @@ if ( ! class_exists( 'MWB_ZENDESK_Manager' ) ) {
 
 			$this->mwb_zndsk_set_locale();
 			$this->mwb_load_dependecy();
-
+			$zndsk_acc_details = get_option( 'mwb_zndsk_account_details' );
+			if( ! empty( $zndsk_acc_details['acc_email'] ) || ! empty( $zndsk_acc_details['acc_url'] ) ) {
+				add_action( 'init', array( $this, 'mwb_add_endpoint' ) );
+				add_action( 'woocommerce_account_ticket-history_endpoint', array( $this, 'mwb_my_account_endpoint_content' ) );
+				add_filter( 'woocommerce_account_menu_items', array( $this, 'mwb_log_history_link' ), 40 );
+				add_filter( 'manage_users_columns', array( $this, 'add_ticket_to_user_table' ) );
+				add_action( 'manage_users_custom_column', array( $this, 'add_ticket_to_user_table_content' ), 10, 3);
+			}
 			add_action( 'admin_init', array( $this, 'mwb_zndsk_save_account_details' ) );
+		}
+		/**
+		 * Create endpoint function
+		 *
+		 * @return void
+		 */
+		public function mwb_add_endpoint() {
+			add_rewrite_endpoint( 'ticket-history', EP_PAGES );
+		}
+		/**
+		 * Endpoint content function
+		 *
+		 * @return void
+		 */
+		public function mwb_my_account_endpoint_content() {
+			$user_data = wp_get_current_user();
+			$user_mail = $user_data->data->user_email;
+			$tickets   = MWB_ZENDESK_Manager::mwb_fetch_useremail( $user_mail );
+			MWB_ZENDESK_Manager::table_for_tickets( $tickets );
+		}
+		/**
+		 * Create a setting tab function
+		 *
+		 * @param array $menu_links fggh.
+		 */
+		public function mwb_log_history_link( $menu_links ) {
+			$menu_links = array_slice( $menu_links, 0, 5, true ) + array( 'ticket-history' => 'Ticket-History' ) + array_slice( $menu_links, 5, null, true );
+			return $menu_links;
+		}
+		/**
+		 * Ticket fetch function function
+		 *
+		 * @param array $value .
+		 * @param array $column_name .
+		 * @param array $user_id .
+		 */
+		public function add_ticket_to_user_table_content( $value, $column_name, $user_id ) {
+			$user = get_userdata( $user_id );
+			if ( 'user_id' === $column_name ) {
+				$author_obj         = get_user_by( 'id', $user_id );
+				$email              = $author_obj->data->user_email;
+				return '<a href="admin-ajax.php?action=mwb_zndsk_ticket&id=' . $email . '&nonce=' . wp_create_nonce( 'zndsk_ticket' ) . '" title="ThickBox Popup" class="thickbox">Show Tickets</a>';
+			}
+			return $value;
+		}
+		/**
+		 * Ticket fetch function function
+		 *
+		 * @param array $columns .
+		 */
+		public function add_ticket_to_user_table( $columns ) {
+			$columns['user_id'] = 'Tickets';
+			return $columns;
+		}
+		/**
+		 * Create_user_ticket function
+		 *
+		 * @return void
+		 */
+		public function mwb_public_function_call() {
+			require_once MWB_ZENDESK_DIR . '/Library/class-mwb-zendesk-global-functions.php';
+			create_user_ticket();
 		}
 		/**
 		 * Define the locale for this plugin for internationalization.
@@ -161,18 +230,17 @@ if ( ! class_exists( 'MWB_ZENDESK_Manager' ) ) {
 				$handled_order_config_options = mwb_zndskwoo_get_order_config_options();
 
 				$zendesk_order_config_data = array();
-				
-				$kpi_fields = mwb_zndskwoo_get_customer_kpi_fields_for_zendesk( $customer_email, $handled_order_config_options );
+
+				$kpi_fields   = mwb_zndskwoo_get_customer_kpi_fields_for_zendesk( $customer_email, $handled_order_config_options );
 				$order_fields = mwb_zndskwoo_get_customer_order_fields_for_zendesk( $customer_email, $handled_order_config_options );
 
-				$zendesk_order_config_data['kpi_fields'] = ! empty( $kpi_fields ) ? $kpi_fields : esc_html__( 'No KPI data found', 'zndskwoo' );
+				$zendesk_order_config_data['kpi_fields']   = ! empty( $kpi_fields ) ? $kpi_fields : esc_html__( 'No KPI data found', 'zndskwoo' );
 				$zendesk_order_config_data['order_fields'] = ! empty( $order_fields ) ? $order_fields : esc_html__( 'No Order data found', 'zndskwoo' );
 
 				$data = wp_json_encode( $zendesk_order_config_data );
-				
+
 				return $data;
-			}
-		}
+			}		}
 		/**
 		 * Saving zendesk account details.
 		 *
@@ -239,20 +307,20 @@ if ( ! class_exists( 'MWB_ZENDESK_Manager' ) ) {
 		 * @since    1.0.0
 		 * @access   private
 		 */
-		public static function mwb_fetch_useremail() {
+		public static function mwb_fetch_useremail($email ='') {
 			global $post;
-
 			$zndsk_acc_details = get_option( 'mwb_zndsk_account_details' );
-
 			if( empty( $zndsk_acc_details['acc_email'] ) || empty( $zndsk_acc_details['acc_url'] ) ) {
 
 				return 'empty_zndsk_account_details';
 			}
-
-			$order = wc_get_order( $post->ID );
-
-			$url = $zndsk_acc_details['acc_url'] . '/api/v2/users/search.json?query=' . $order->get_billing_email();
-
+			if ( is_array( $post ) || is_object( $post ) ) {
+				$order = wc_get_order( $post->ID );
+			}
+			if ( empty ( $email ) ) {
+				$email = $order->get_billing_email();
+			}
+			$url = $zndsk_acc_details['acc_url'] . '/api/v2/users/search.json?query=' . $email;
 			$basic = '';
 
 			if( ! empty( $zndsk_acc_details['acc_api_token'] ) ) {
@@ -269,7 +337,7 @@ if ( ! class_exists( 'MWB_ZENDESK_Manager' ) ) {
 
 				return 'empty_zndsk_account_details';
 			}
-			
+
 			$headers = array(
 				'Content-Type'  => 'application/json',
 				'Authorization' => 'Basic ' . $basic,
@@ -279,7 +347,6 @@ if ( ! class_exists( 'MWB_ZENDESK_Manager' ) ) {
 				'headers'   => $headers,
 				'sslverify' => false,
 			));
-
 			if ( is_wp_error( $response ) ) {
 				$status_code = $response->get_error_code();
 				$res_message = $response->get_error_message();
@@ -288,7 +355,7 @@ if ( ! class_exists( 'MWB_ZENDESK_Manager' ) ) {
 				$res_message = wp_remote_retrieve_response_message( $response );
 			}
 
-			if ( 200 == $status_code ) {
+			if ( 200 === $status_code ) {
 
 				$api_body = wp_remote_retrieve_body( $response );
 
@@ -298,13 +365,14 @@ if ( ! class_exists( 'MWB_ZENDESK_Manager' ) ) {
 			} else {
 				return 'zndsk_api_error';
 			}
-
-			$users = $api_body->users;
-
+				$users = $api_body->users;
 			foreach ( $users as $key => $value ) {
-				if ( $value->email == $order->get_billing_email() ) {
+				if ( $value->email == $email ) {
 					$response = self::mwb_fetch_user_tickets( $value->id );
 					return $response;
+				} else {
+					$users = $api_body->users;
+					return $users;
 				}
 			}
 		}
@@ -316,7 +384,6 @@ if ( ! class_exists( 'MWB_ZENDESK_Manager' ) ) {
 		 * @return array  $data      order details
 		 */
 		public static function mwb_fetch_user_tickets( $user_id ) {
-
 			$zndsk_acc_details = get_option( 'mwb_zndsk_account_details' );
 
 			$url = $zndsk_acc_details['acc_url'] . '/api/v2/users/' . $user_id . '/tickets/requested.json';
@@ -338,11 +405,12 @@ if ( ! class_exists( 'MWB_ZENDESK_Manager' ) ) {
 				'Authorization' => 'Basic ' . $basic,
 			);
 
-			$response = wp_remote_get( $url, array(
-				'headers'   => $headers,
-				'sslverify' => false,
-			) );
-
+			$response = wp_remote_get( $url,
+				array(
+					'headers'   => $headers,
+					'sslverify' => false,
+				)
+			);
 			if ( is_wp_error( $response ) ) {
 				$status_code = $response->get_error_code();
 				$res_message = $response->get_error_message();
@@ -359,7 +427,6 @@ if ( ! class_exists( 'MWB_ZENDESK_Manager' ) ) {
 					$api_body = json_decode( $api_body );
 				}
 			}
-
 			$tickets       = $api_body->tickets;
 			$ticket_fields = array();
 			$count         = 0;
@@ -369,10 +436,20 @@ if ( ! class_exists( 'MWB_ZENDESK_Manager' ) ) {
 					'subject'     => $single_ticket->subject,
 					'description' => $single_ticket->description,
 					'status'      => $single_ticket->status,
+					'url'         => $single_ticket->url,
 				);
 			}
 
 			return $ticket_fields;
+		}
+		/**
+		 * Table for ticket function
+		 *
+		 * @param array $tickets .
+		 * @return void
+		 */
+		public static function table_for_tickets( $tickets ) {
+			include_once( MWB_ZENDESK_DIR_PATH . 'admin-templates/ticket.php' );
 		}
 	}
 }

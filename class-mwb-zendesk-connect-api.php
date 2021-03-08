@@ -57,6 +57,26 @@ class MWB_ZENDESK_Connect_Api {
 		$this->mwb_zendeskconnect_manager = MWB_ZENDESK_Manager::get_instance();
 		add_action( 'wp_ajax_mwb_zndsk_suggest_accept', array( $this, 'mwb_zndsk_suggest_accept' ) );
 		add_action( 'wp_ajax_mwb_zndsk_suggest_later', array( $this, 'mwb_zndsk_suggest_later' ) );
+		add_action( 'wp_ajax_mwb_zndsk_ticket', array( $this, 'mwb_zndsk_ticket' ) );
+	}
+	/**
+	 * Show a tickbox of tickets
+	 *
+	 * @since    1.0.0
+	 */
+	public function mwb_zndsk_ticket() {
+		$url   = get_site_url();
+		$nonce = isset( $_GET['nonce'] ) ? sanitize_text_field( wp_unslash( $_GET['nonce'] ) ) : '';
+		$check = wp_verify_nonce( $nonce, 'zndsk_ticket' );
+		if ( $check ) {
+			if ( isset( $_GET['id'] ) ) {
+				$all_user_ticket_id = isset( $_GET['id'] ) ? sanitize_text_field( wp_unslash( $_GET['id'] ) ) : '';
+
+				$ticket = MWB_ZENDESK_Manager::mwb_fetch_useremail( $all_user_ticket_id );
+				$ticket = json_encode( $ticket );
+				include_once( MWB_ZENDESK_DIR_PATH . 'admin-templates/zndsk_all_ticket.php' );
+			}
+		}
 	}
 	/**
 	 * Registering routes.

@@ -27,7 +27,7 @@ function mwb_zndskwoo_get_order_config_options() {
 
 	$handled_order_config_options = array();
 
-	if( 'not_saved' == $order_config_options ) {
+	if( 'not_saved' === $order_config_options ) {
 
 		$handled_order_config_options = mwb_zndskwoo_default_order_config_options();
 	}
@@ -553,4 +553,52 @@ function mwb_zndskwoo_get_customer_order_fields_for_zendesk( $customer_email = '
 	}
 
 	return $zendesk_order_fields_array;
+}
+/**
+ * Create user tickets.
+ *
+ * @return void
+ */
+function create_user_ticket() {
+	$nonce = isset( $_POST['nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['nonce'] ) ) : '';
+	$check = wp_verify_nonce( $nonce, 'zndsk_ticket_check' );
+	if ( $check ) {
+		if ( isset( $_POST['submit'] ) ) {
+			$email             = isset( $_POST['email'] ) ? sanitize_text_field( wp_unslash( $_POST['email'] ) ) : '';
+			$comment           = isset( $_POST['Comment'] ) ? sanitize_text_field( wp_unslash( $_POST['Comment'] ) ) : '';
+			$priority          = 'Low';
+			$subject           = isset( $_POST['Subject'] ) ? sanitize_text_field( wp_unslash( $_POST['Subject'] ) ) : '';
+			$ticket            = array(
+				'ticket' => array(
+					'subject'   => $subject,
+					'comment'   => array(
+						'body' => $comment,
+					),
+					'requester' => array(
+						'name'     => 'user',
+						'email'    => $email,
+						'priority' => $priority,
+					),
+				),
+			);
+			$ticket            = wp_json_encode( $ticket );
+			$zndsk_acc_details = get_option( 'mwb_zndsk_account_details' );
+
+			$basic = base64_encode( $zndsk_acc_details['acc_email'] . '/token:' . $zndsk_acc_details['acc_api_token'] );
+			$url   = $zndsk_acc_details['acc_url'] . 'api/v2/tickets.json';
+			$data  = wp_remote_post( $url,
+				array(
+					'headers' => array(
+						'Content-Type'  => 'application/json',
+						'Authorization' => 'Basic ' . $basic,
+					),
+					'body'    => $ticket,
+					'method'  => 'POST',
+				)
+			);
+			if ( is_wp_error( $data ) ) {
+				echo 'Ticket not created';
+			}
+		}
+	}
 }
