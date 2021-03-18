@@ -555,7 +555,7 @@ function mwb_zndskwoo_get_customer_order_fields_for_zendesk( $customer_email = '
 	return $zendesk_order_fields_array;
 }
 /**
- * Create user tickets.
+ * Undocumented function
  *
  * @return void
  */
@@ -564,14 +564,14 @@ function create_user_ticket() {
 	$check = wp_verify_nonce( $nonce, 'zndsk_ticket_check' );
 	if ( $check ) {
 		if ( isset( $_POST['submit'] ) ) {
-			$email             = isset( $_POST['email'] ) ? sanitize_text_field( wp_unslash( $_POST['email'] ) ) : '';
-			$comment           = isset( $_POST['Comment'] ) ? sanitize_text_field( wp_unslash( $_POST['Comment'] ) ) : '';
-			$priority          = 'Low';
-			$subject           = isset( $_POST['Subject'] ) ? sanitize_text_field( wp_unslash( $_POST['Subject'] ) ) : '';
-			$ticket            = array(
+			$email    = isset( $_POST['mwb-create-email'] ) ? sanitize_text_field( wp_unslash( $_POST['mwb-create-email'] ) ) : '';
+			$comment  =  isset( $_POST['mwb-create-comment'] ) ? sanitize_text_field( wp_unslash( $_POST['mwb-create-comment'] ) ) : '';
+			$priority = 'Low';
+			$subject  = isset( $_POST['mwb-create-subject'] ) ? sanitize_text_field( wp_unslash( $_POST['mwb-create-subject'] ) ) : '';
+			$ticket   = array(
 				'ticket' => array(
-					'subject'   => $subject,
-					'comment'   => array(
+					'subject' => $subject,
+					'comment' => array(
 						'body' => $comment,
 					),
 					'requester' => array(

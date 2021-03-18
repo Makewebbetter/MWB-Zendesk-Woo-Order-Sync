@@ -25,7 +25,9 @@
  * WC tested up to: 4.8.0
  * Domain Path: /languages
  */
+
 use Stripe\Issuing\Authorization;
+
 /**
  * Exit if accessed directly
  */
@@ -77,7 +79,6 @@ if ( $activated ) {
 	 * @since    1.0.0
 	 */
 	function mwb_zndsk_activation() {
-
 		do_action( 'mwb_zndsk_init' );
 	}
 	/**
@@ -86,7 +87,6 @@ if ( $activated ) {
 	 * @since    1.0.0
 	 */
 	function mwb_zndsk_deactivation() {
-
 		delete_option( 'mwb_zndsk_account_details' );
 		delete_option( 'zendesk_email_error' );
 		delete_option( 'zendesk_url_error' );
@@ -108,11 +108,9 @@ if ( $activated ) {
 	 * @since    1.0.0
 	 */
 	function mwb_zndsk_add_api_file_for_plugin() {
-
 		// including supporting file of plugin.
 		include_once MWB_ZENDESK_DIR . '/class-mwb-zendesk-connect-api.php';
 		$mwb_zndsk_instance = MWB_ZENDESK_Connect_Api::get_instance();
-
 		add_action( 'rest_api_init', array( $mwb_zndsk_instance, 'mwb_zndsk_register_routes' ) );
 	}
 
@@ -123,9 +121,7 @@ if ( $activated ) {
 	 * @since    1.0.0
 	 */
 	function mwb_zndsk_enqueue_script() {
-
 		$screen = get_current_screen();
-
 		$valid_screens = array(
 			'toplevel_page_mwb-zendesk-order-sync',
 			'zendesk-order-sync_page_mwb-zendesk-order-config',
@@ -133,11 +129,8 @@ if ( $activated ) {
 		);
 
 		if( ! empty( $screen->id ) && in_array( $screen->id, $valid_screens ) ) {
-
 			wp_enqueue_style( 'mwb-zndsk-admin-style', MWB_ZENDESK_DIR_URL . 'assets/zndsk-admin.css', false, MWB_ZENDESK_VERSION, 'all' );
-
-			wp_enqueue_script( 'mwb-zndsk-admin-script', MWB_ZENDESK_DIR_URL . 'assets/zndsk-admin.js', array( 'jquery' , 'jquery-ui-draggable', 'jquery-ui-droppable' ), MWB_ZENDESK_VERSION, true );
-			
+			wp_enqueue_script( 'mwb-zndsk-admin-script', MWB_ZENDESK_DIR_URL . 'assets/zndsk-admin.js', array( 'jquery' , 'jquery-ui-draggable', 'jquery-ui-droppable' ), MWB_ZENDESK_VERSION, true );	
 			wp_localize_script(
 				'mwb-zndsk-admin-script', 'zndsk_ajax_object',
 				array(
@@ -159,7 +152,14 @@ if ( $activated ) {
 	 * @return void
 	 */
 	function mwb_zndsk_ticket_script() {
-		wp_enqueue_script( 'mwb-zndsk-admin-script', MWB_ZENDESK_DIR_URL . 'assets/zndsk-ticket.js', false, MWB_ZENDESK_VERSION, 'all' );
+		wp_enqueue_script( 'mwb-zndsk-ticket-script', MWB_ZENDESK_DIR_URL . 'assets/zndsk-ticket.js', false, MWB_ZENDESK_VERSION, 'all' );
+		wp_localize_script(
+			'mwb-zndsk-ticket-script', 'zndsk_ajax_ticket_object',
+			array(
+				'ajax_url'             => admin_url( 'admin-ajax.php' ),
+				'zndskSecurity'        => wp_create_nonce( 'zndsk_ticket_email' ),
+			)
+		);
 	}
 	/**
 	 * Show plugin development notice
@@ -181,8 +181,6 @@ if ( $activated ) {
 		</div>
 		<?php
 	}
-	add_action( 'admin_notices', 'mwb_zndsk_admin_notice__success' );
-
 } else {
 	/**
 	 * Error notice

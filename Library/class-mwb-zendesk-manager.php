@@ -59,77 +59,14 @@ if ( ! class_exists( 'MWB_ZENDESK_Manager' ) ) {
 
 			$this->mwb_zndsk_set_locale();
 			$this->mwb_load_dependecy();
-			$zndsk_acc_details = get_option( 'mwb_zndsk_account_details' );
-			if( ! empty( $zndsk_acc_details['acc_email'] ) || ! empty( $zndsk_acc_details['acc_url'] ) ) {
-				add_action( 'init', array( $this, 'mwb_add_endpoint' ) );
-				add_action( 'woocommerce_account_ticket-history_endpoint', array( $this, 'mwb_my_account_endpoint_content' ) );
-				add_filter( 'woocommerce_account_menu_items', array( $this, 'mwb_log_history_link' ), 40 );
-				add_filter( 'manage_users_columns', array( $this, 'add_ticket_to_user_table' ) );
-				add_action( 'manage_users_custom_column', array( $this, 'add_ticket_to_user_table_content' ), 10, 3);
-			}
+			add_action( 'init', array( $this, 'mwb_add_endpoint' ) );
 			add_action( 'admin_init', array( $this, 'mwb_zndsk_save_account_details' ) );
-		}
-		/**
-		 * Create endpoint function
-		 *
-		 * @return void
-		 */
-		public function mwb_add_endpoint() {
-			add_rewrite_endpoint( 'ticket-history', EP_PAGES );
-		}
-		/**
-		 * Endpoint content function
-		 *
-		 * @return void
-		 */
-		public function mwb_my_account_endpoint_content() {
-			$user_data = wp_get_current_user();
-			$user_mail = $user_data->data->user_email;
-			$tickets   = MWB_ZENDESK_Manager::mwb_fetch_useremail( $user_mail );
-			MWB_ZENDESK_Manager::table_for_tickets( $tickets );
-		}
-		/**
-		 * Create a setting tab function
-		 *
-		 * @param array $menu_links fggh.
-		 */
-		public function mwb_log_history_link( $menu_links ) {
-			$menu_links = array_slice( $menu_links, 0, 5, true ) + array( 'ticket-history' => 'Ticket-History' ) + array_slice( $menu_links, 5, null, true );
-			return $menu_links;
-		}
-		/**
-		 * Ticket fetch function function
-		 *
-		 * @param array $value .
-		 * @param array $column_name .
-		 * @param array $user_id .
-		 */
-		public function add_ticket_to_user_table_content( $value, $column_name, $user_id ) {
-			$user = get_userdata( $user_id );
-			if ( 'user_id' === $column_name ) {
-				$author_obj         = get_user_by( 'id', $user_id );
-				$email              = $author_obj->data->user_email;
-				return '<a href="admin-ajax.php?action=mwb_zndsk_ticket&id=' . $email . '&nonce=' . wp_create_nonce( 'zndsk_ticket' ) . '" title="ThickBox Popup" class="thickbox">Show Tickets</a>';
-			}
-			return $value;
-		}
-		/**
-		 * Ticket fetch function function
-		 *
-		 * @param array $columns .
-		 */
-		public function add_ticket_to_user_table( $columns ) {
-			$columns['user_id'] = 'Tickets';
-			return $columns;
-		}
-		/**
-		 * Create_user_ticket function
-		 *
-		 * @return void
-		 */
-		public function mwb_public_function_call() {
-			require_once MWB_ZENDESK_DIR . '/Library/class-mwb-zendesk-global-functions.php';
-			create_user_ticket();
+			add_action( 'woocommerce_account_ticket-history_endpoint', array( $this, 'mwb_my_account_endpoint_content2' ) );
+			add_action( 'woocommerce_account_ticket-history_endpoint', array( $this, 'mwb_my_account_endpoint_content' ), 10, 1 );
+			add_filter( 'woocommerce_account_menu_items', array( $this, 'mwb_log_history_link' ), 40 );
+			add_filter( 'manage_users_columns', array( $this, 'add_ticket_to_user_table' ) );
+			add_action( 'manage_users_custom_column', array( $this, 'add_ticket_to_user_table_content' ), 10, 3 );
+			add_action( 'init', array( $this, 'mwb_public_function_call' ) );
 		}
 		/**
 		 * Define the locale for this plugin for internationalization.
@@ -163,6 +100,106 @@ if ( ! class_exists( 'MWB_ZENDESK_Manager' ) ) {
 				false,
 				dirname( dirname( plugin_basename( __FILE__ ) ) ) . '/languages/'
 			);
+		}
+		/**
+		 * Ticket fetch function function
+		 *
+		 * @param array $columns .
+		 */
+		public function add_ticket_to_user_table( $columns ) {
+			$columns['user_id'] = 'Tickets';
+			return $columns;
+		}
+		/**
+		 * Create_user_ticket function
+		 *
+		 * @return void
+		 */
+		public function mwb_public_function_call() {
+			require_once MWB_ZENDESK_DIR . '/Library/class-mwb-zendesk-global-functions.php';
+			create_user_ticket();
+		}
+		/**
+		 * Ticket fetch function function
+		 *
+		 * @param array $value .
+		 * @param array $column_name .
+		 * @param array $user_id .
+		 */
+		public function add_ticket_to_user_table_content( $value, $column_name, $user_id ) {
+			$user = get_userdata( $user_id );
+			if ( 'user_id' === $column_name ) {
+				$author_obj         = get_user_by( 'id', $user_id );
+				$email              = $author_obj->data->user_email;
+				return '<a href="admin-ajax.php?action=mwb_zndsk_ticket&id=' . $email . '&nonce=' . wp_create_nonce( 'zndsk_ticket' ) . '" title="ThickBox Popup" class="thickbox">Show Tickets</a>';
+			}
+			return $value;
+		}
+		/**
+		 * Create a setting tab function
+		 *
+		 * @param array $menu_links fggh.
+		 */
+		public function mwb_log_history_link( $menu_links ) {
+			$menu_links = array_slice( $menu_links, 0, 5, true ) + array( 'ticket-history' => 'Ticket-History' ) + array_slice( $menu_links, 5, null, true );
+			return $menu_links;
+		}
+		/**
+		 * Create endpoint function
+		 *
+		 * @return void
+		 */
+		public function mwb_add_endpoint() {
+			add_rewrite_endpoint( 'ticket-history', EP_PAGES );
+		}
+		/**
+		 * Endpoint content function
+		 *
+		 * @return void
+		 */
+		public function mwb_my_account_endpoint_content2( ) {
+			$user_data = wp_get_current_user();
+			$user_mail = $user_data->data->user_email;
+			$select_array_email = array();
+			$customer_orders = get_posts( array(
+				'numberposts' => -1,
+				'meta_key'    => '_customer_user',
+				'meta_value'  => get_current_user_id(),
+				'post_type'   => wc_get_order_types(),
+				'post_status' => array_keys( wc_get_order_statuses() ),
+			) );
+			if ( ! empty( $customer_orders ) && is_array( $customer_orders ) ) {
+				foreach ( $customer_orders as $key => $value ) {
+					$order = wc_get_order( $value->ID );
+					$order_data = $order->get_data();
+					$user_email = $order_data['billing']['email'];
+					if( ! in_array( $user_email, $select_array_email ,true ) ) {
+					array_push( $select_array_email, $order_data['billing']['email'] );
+					}
+				}
+				?>
+				<div id="select_box_email">
+				<label for="email"> Choose Your Billing Email --</label>
+				<select id="mwb-zendsk-email">
+				<?php foreach( $select_array_email as $key => $value ) { ?>
+					<option value="<?php echo $value ?>" <?php echo ( $value === $user_mail ) ? esc_attr( 'selected' ) : ''; ?> ><?php esc_attr_e( $value ); ?></option> 
+				<?php } } ?>
+				</select>
+				</div>
+				<?php
+		}
+		/**
+		 * Endpoint content function
+		 *
+		 * @return void
+		 */
+		public function mwb_my_account_endpoint_content( $email = '' ) {
+			$user_data = wp_get_current_user();
+			if ( empty( $email ) ) {
+				$email = $user_data->data->user_email;
+			}
+			$tickets   = MWB_ZENDESK_Manager::mwb_fetch_useremail( $email );
+			MWB_ZENDESK_Manager::table_for_tickets( $tickets );
 		}
 		/**
 		 * Register routes for the order details class.
@@ -240,7 +277,8 @@ if ( ! class_exists( 'MWB_ZENDESK_Manager' ) ) {
 				$data = wp_json_encode( $zendesk_order_config_data );
 
 				return $data;
-			}		}
+			}
+		}
 		/**
 		 * Saving zendesk account details.
 		 *
@@ -248,6 +286,7 @@ if ( ! class_exists( 'MWB_ZENDESK_Manager' ) ) {
 		 * @access   private
 		 */
 		public function mwb_zndsk_save_account_details() {
+
 
 			if( ! empty( $_REQUEST['zndsk_secure_check'] ) ) {
 
@@ -269,7 +308,7 @@ if ( ! class_exists( 'MWB_ZENDESK_Manager' ) ) {
 					if ( isset( $_POST['zndsk_setting_zendesk_url'] ) ) {
 						$website = sanitize_text_field( wp_unslash( $_POST['zndsk_setting_zendesk_url'] ) );// Input var okay.
 					}
-					
+
 					$api_token = ! empty( $_POST['zndsk_setting_zendesk_api_token'] ) ? sanitize_text_field( wp_unslash( $_POST['zndsk_setting_zendesk_api_token'] ) ) : ''; // Input var okay.
 
 					$emailerror   = '';
@@ -405,12 +444,10 @@ if ( ! class_exists( 'MWB_ZENDESK_Manager' ) ) {
 				'Authorization' => 'Basic ' . $basic,
 			);
 
-			$response = wp_remote_get( $url,
-				array(
-					'headers'   => $headers,
-					'sslverify' => false,
-				)
-			);
+			$response = wp_remote_get( $url, array(
+				'headers'   => $headers,
+				'sslverify' => false,
+			));
 			if ( is_wp_error( $response ) ) {
 				$status_code = $response->get_error_code();
 				$res_message = $response->get_error_message();
@@ -443,7 +480,7 @@ if ( ! class_exists( 'MWB_ZENDESK_Manager' ) ) {
 			return $ticket_fields;
 		}
 		/**
-		 * Table for ticket function
+		 * Tabl for ticket function
 		 *
 		 * @param array $tickets .
 		 * @return void

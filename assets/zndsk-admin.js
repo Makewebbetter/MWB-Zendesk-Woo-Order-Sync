@@ -7,12 +7,9 @@
 	var zndskMailFailure     = zndsk_ajax_object.zndskMailFailure;
 	var zndskMailAlreadySent = zndsk_ajax_object.zndskMailAlreadySent;
 	jQuery(document).ready(function() {
-
 		jQuery( '.mwb-reject-button' ).on(
 			'click',function(){
-
 				jQuery( '#zndsk_loader' ).show();
-
 				jQuery.post(
 					ajaxUrl , {'action' : 'mwb_zndsk_suggest_later', 'zndskSecurity' : zndskSecurity }, function(response){
 						location.reload();
@@ -86,7 +83,7 @@
 				$(this).append(ui.draggable);
 			}
 		});
-
+	
 		// Order config options ajax handling.
 		var latest_orders_count = '';
 		var source_kpi_fields = [];
@@ -165,6 +162,5 @@
           panel.style.maxHeight = panel.scrollHeight + "px";
         } 
       });
-
 
 })( jQuery );
