@@ -66,7 +66,7 @@ function check_button_status(){
         $('.mwb-zendesk-ticket-form').hide();
         $('.mwb-zendesk-hitbutton').click(function(){
             $('#select_box_email').hide(); 
-            $('.error').hide();  
+            $('.mwb-error-messege').hide();  
             $('.mwb-zendesk-hitbutton').hide();
             $('.mwb-zndsk-ticket-table').hide();
             $('.mwb-zendesk-ticket-form').show();
