@@ -104,7 +104,6 @@ if ( ! empty( $tickets ) && is_array( $tickets ) ) {
 					array_push( $select_array_email, $order_data['billing']['email'] );
 					}
 				}
-			}
 			?>
 			<div id="select_box_email_ticket_create">
 				<p><label for="email"> Choose Your Email </label></p>
@@ -112,10 +111,17 @@ if ( ! empty( $tickets ) && is_array( $tickets ) ) {
 					<select name="mwb-create-email">
 					<?php foreach( $select_array_email as $key => $value ) { ?>
 					<option value="<?php echo $value ?>" ><?php esc_attr_e( $value ); ?></option> 
-					<?php  } ?>
+					<?php  }?>
 					</select>
 				</p>
 			</div>
+			<?php } else {
+				?>
+				<div>
+				<input type="email" name="mwb-create-email" value="<?php echo $user_mail; ?>">
+				</div>
+				<?php
+			} ?>
 			<div>
 				<p><input type="submit" id="mwb-create-submit-ticket" name="submit" value="Create Ticket"></p>
 			</div>

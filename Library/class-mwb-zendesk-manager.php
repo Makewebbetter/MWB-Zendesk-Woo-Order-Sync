@@ -61,8 +61,7 @@ if ( ! class_exists( 'MWB_ZENDESK_Manager' ) ) {
 			$this->mwb_load_dependecy();
 			add_action( 'init', array( $this, 'mwb_add_endpoint' ) );
 			add_action( 'admin_init', array( $this, 'mwb_zndsk_save_account_details' ) );
-			add_action( 'woocommerce_account_ticket-history_endpoint', array( $this, 'mwb_my_account_endpoint_content2' ) );
-			add_action( 'woocommerce_account_ticket-history_endpoint', array( $this, 'mwb_my_account_endpoint_content' ), 10, 1 );
+			add_action( 'woocommerce_account_ticket-history_endpoint', array( $this, 'mwb_my_account_endpoint_content_main' ) );
 			add_filter( 'woocommerce_account_menu_items', array( $this, 'mwb_log_history_link' ), 40 );
 			add_filter( 'manage_users_columns', array( $this, 'add_ticket_to_user_table' ) );
 			add_action( 'manage_users_custom_column', array( $this, 'add_ticket_to_user_table_content' ), 10, 3 );
@@ -157,11 +156,11 @@ if ( ! class_exists( 'MWB_ZENDESK_Manager' ) ) {
 		 *
 		 * @return void
 		 */
-		public function mwb_my_account_endpoint_content2( ) {
+		public function mwb_my_account_endpoint_content_main() {
 			$user_data = wp_get_current_user();
 			$user_mail = $user_data->data->user_email;
 			$select_array_email = array();
-			$customer_orders = get_posts( array(
+			$customer_orders  = get_posts( array(
 				'numberposts' => -1,
 				'meta_key'    => '_customer_user',
 				'meta_value'  => get_current_user_id(),
@@ -187,6 +186,8 @@ if ( ! class_exists( 'MWB_ZENDESK_Manager' ) ) {
 				</select>
 				</div>
 				<?php
+				$object = new MWB_ZENDESK_Manager();
+				$object->mwb_my_account_endpoint_content();
 		}
 		/**
 		 * Endpoint content function
