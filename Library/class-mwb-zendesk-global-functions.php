@@ -14,7 +14,112 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @package    mwb-zendesk-woo-order-sync
  * @subpackage mwb-zendesk-woo-order-sync/Library
  */
+/**
+ * Update user tickets.
+ *
+ * @return void
+ */
+function update_user_ticket() {
+	$update_from_nonce = isset( $_POST['nonce-for-update'] ) ? sanitize_text_field( wp_unslash( $_POST['nonce-for-update'] ) ) : ' ' ;
+	$update_check      = wp_verify_nonce( $update_from_nonce, 'zndsk_ticket_updates' );
+	if ( $update_check ) {
+		if ( isset( $_POST['update_ticket_all'] ) ) {
+			$update_ticket_id      = isset( $_POST['mwb-ticket-no'] ) ? sanitize_text_field( wp_unslash( $_POST['mwb-ticket-no'] ) ) : '';
+			$update_ticket_comment = isset( $_POST['mwb-update-comment'] ) ? sanitize_text_field( wp_unslash( $_POST['mwb-update-comment'] ) ) : '';
+			$update_ticket_subject = isset( $_POST['mwb-update-subject'] ) ? sanitize_text_field( wp_unslash( $_POST['mwb-update-subject'] ) ) : '';
+			$update_ticket_email   = isset( $_POST['mwb-update-email'] ) ? sanitize_text_field( wp_unslash( $_POST['mwb-update-email'] ) ) : '';
+			$priority = 'Low';
+			$requester_id = get_option( get_current_user_id());
+			$ticket   = array(
+				'ticket' => array(
+					'subject'   => $update_ticket_subject,
+					'comment'   => array(
+						'body' => $update_ticket_comment,
+						'requester_id' => $requester_id,
+						'author_id'    => $requester_id,
+					),
+					'requester' => array(
+						'name'     => 'user',
+						'requester_id' => $requester_id,
+						'email'    => $update_ticket_email,
+						'priority' => $priority,
+						'author_id'    => $requester_id,
+					),
+				),
+			);
+			$ticket            = wp_json_encode( $ticket );
+			$zndsk_acc_details = get_option( 'mwb_zndsk_account_details' );
 
+			$basic = base64_encode( $zndsk_acc_details['acc_email'] . '/token:' . $zndsk_acc_details['acc_api_token'] );
+			$url   = $zndsk_acc_details['acc_url'] . 'api/v2/tickets/' . $update_ticket_id;
+			$data  = wp_remote_request( $url,
+				array(
+					'headers' => array(
+						'Content-Type'  => 'application/json',
+						'Authorization' => 'Basic ' . $basic,
+					),
+					'body'      => $ticket,
+					'method'    => 'PUT',
+				)
+			);
+			if ( is_wp_error( $data ) ) {
+				wc_add_notice( 'Comment Not Updated', 'error' );
+			} else {
+				wc_add_notice( 'Comment Updated', 'success' );
+			}
+		}
+	}
+}
+/**
+ * Create user tickets.
+ *
+ * @return void
+ */
+function create_user_ticket() {
+	$nonce = isset( $_POST['nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['nonce'] ) ) : ' ';
+	$check = wp_verify_nonce( $nonce, 'zndsk_ticket_check' );
+	if ( $check ) {
+		if ( isset( $_POST['submit_ticket_all'] ) ) {
+			$email    = isset( $_POST['mwb-create-email'] ) ? sanitize_text_field( wp_unslash( $_POST['mwb-create-email'] ) ) : '';
+			$comment  =  isset( $_POST['mwb-create-comment'] ) ? sanitize_text_field( wp_unslash( $_POST['mwb-create-comment'] ) ) : '';
+			$priority = 'Low';
+			$subject  = isset( $_POST['mwb-create-subject'] ) ? sanitize_text_field( wp_unslash( $_POST['mwb-create-subject'] ) ) : '';
+			$ticket   = array(
+				'ticket' => array(
+					'subject'   => $subject,
+					'comment'   => array(
+						'body' => $comment,
+					),
+					'requester' => array(
+						'name'     => 'user',
+						'email'    => $email,
+						'priority' => $priority,
+					),
+				),
+			);
+			$ticket            = wp_json_encode( $ticket );
+			$zndsk_acc_details = get_option( 'mwb_zndsk_account_details' );
+
+			$basic = base64_encode( $zndsk_acc_details['acc_email'] . '/token:' . $zndsk_acc_details['acc_api_token'] );
+			$url   = $zndsk_acc_details['acc_url'] . 'api/v2/tickets.json';
+			$data  = wp_remote_post( $url,
+				array(
+					'headers' => array(
+						'Content-Type'  => 'application/json',
+						'Authorization' => 'Basic ' . $basic,
+					),
+					'body'    => $ticket,
+					'method'  => 'POST',
+				)
+			);
+			if ( is_wp_error( $data ) ) {
+				wc_add_notice( 'Ticket Not Created', 'error');
+			} else {
+				wc_add_notice( 'Ticket Created', 'success');
+			}
+		}
+	}
+}
 /**
  * Get Zendesk Order Configuration options.
  * Saved/Default options.
@@ -554,51 +659,4 @@ function mwb_zndskwoo_get_customer_order_fields_for_zendesk( $customer_email = '
 
 	return $zendesk_order_fields_array;
 }
-/**
- * Undocumented function
- *
- * @return void
- */
-function create_user_ticket() {
-	$nonce = isset( $_POST['nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['nonce'] ) ) : '';
-	$check = wp_verify_nonce( $nonce, 'zndsk_ticket_check' );
-	if ( $check ) {
-		if ( isset( $_POST['submit'] ) ) {
-			$email    = isset( $_POST['mwb-create-email'] ) ? sanitize_text_field( wp_unslash( $_POST['mwb-create-email'] ) ) : '';
-			$comment  =  isset( $_POST['mwb-create-comment'] ) ? sanitize_text_field( wp_unslash( $_POST['mwb-create-comment'] ) ) : '';
-			$priority = 'Low';
-			$subject  = isset( $_POST['mwb-create-subject'] ) ? sanitize_text_field( wp_unslash( $_POST['mwb-create-subject'] ) ) : '';
-			$ticket   = array(
-				'ticket' => array(
-					'subject' => $subject,
-					'comment' => array(
-						'body' => $comment,
-					),
-					'requester' => array(
-						'name'     => 'user',
-						'email'    => $email,
-						'priority' => $priority,
-					),
-				),
-			);
-			$ticket            = wp_json_encode( $ticket );
-			$zndsk_acc_details = get_option( 'mwb_zndsk_account_details' );
 
-			$basic = base64_encode( $zndsk_acc_details['acc_email'] . '/token:' . $zndsk_acc_details['acc_api_token'] );
-			$url   = $zndsk_acc_details['acc_url'] . 'api/v2/tickets.json';
-			$data  = wp_remote_post( $url,
-				array(
-					'headers' => array(
-						'Content-Type'  => 'application/json',
-						'Authorization' => 'Basic ' . $basic,
-					),
-					'body'    => $ticket,
-					'method'  => 'POST',
-				)
-			);
-			if ( is_wp_error( $data ) ) {
-				echo 'Ticket not created';
-			}
-		}
-	}
-}

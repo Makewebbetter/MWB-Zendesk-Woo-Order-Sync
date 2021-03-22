@@ -160,6 +160,7 @@ if ( $activated ) {
 				'zndskSecurity'        => wp_create_nonce( 'zndsk_ticket_email' ),
 			)
 		);
+		add_thickbox();
 	}
 	/**
 	 * Show plugin development notice

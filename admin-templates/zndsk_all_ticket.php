@@ -37,11 +37,11 @@ if ( ! empty( $ticket ) || is_array( $ticket ) ) {
 				<table id="myTable2">
 					<thead>
 						<tr>
-									<th class="woocommerce-orders-table__header woocommerce-orders-table__header-order-number><span class="nobr">' . __( "Ticket-id", "zndskwoo" ) . '</span></th>
-									<th class="woocommerce-orders-table__header woocommerce-orders-table__header-order-subject><span class="nobr">' . __( "Subject", "zndskwoo" ) . '</span></th>
-									<th class="woocommerce-orders-table__header woocommerce-orders-table__header-order-description><span class="nobr">' . __( "Description", "zndskwoo" ) . '</span></th>
-									<th class="woocommerce-orders-table__header woocommerce-orders-table__header-order-status><span class="nobr">' . __( "Status", "zndskwoo" ) . '</span></th>
-									<th class="woocommerce-orders-table__header woocommerce-orders-table__header-order-actions><span class="nobr">' . __( "View-Tickets", "zndskwoo" ) . '</span></th>
+									<th class="woocommerce-orders-table__header woocommerce-orders-table__header-order-number><span class="nobr">' .  esc_html_e( 'Ticket-id', 'zndskwoo' ) . '</span></th>
+									<th class="woocommerce-orders-table__header woocommerce-orders-table__header-order-subject><span class="nobr">' .  esc_html_e( 'Subject', 'zndskwoo' ) . '</span></th>
+									<th class="woocommerce-orders-table__header woocommerce-orders-table__header-order-description><span class="nobr">' .  esc_html_e( 'Description', 'zndskwoo' ) . '</span></th>
+									<th class="woocommerce-orders-table__header woocommerce-orders-table__header-order-status><span class="nobr">' .  esc_html_e( 'Status', 'zndskwoo' ) . '</span></th>
+									<th class="woocommerce-orders-table__header woocommerce-orders-table__header-order-actions><span class="nobr">' .  esc_html_e( 'View-Tickets', 'zndskwoo' ) . '</span></th>
 						</tr>
 					</thead>
 					<tbody>';

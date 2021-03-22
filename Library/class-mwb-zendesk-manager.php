@@ -66,6 +66,7 @@ if ( ! class_exists( 'MWB_ZENDESK_Manager' ) ) {
 			add_filter( 'manage_users_columns', array( $this, 'add_ticket_to_user_table' ) );
 			add_action( 'manage_users_custom_column', array( $this, 'add_ticket_to_user_table_content' ), 10, 3 );
 			add_action( 'init', array( $this, 'mwb_public_function_call' ) );
+			add_action( 'init', array( $this, 'mwb_public_ticket_update_function_call' ) );
 		}
 		/**
 		 * Define the locale for this plugin for internationalization.
@@ -108,6 +109,15 @@ if ( ! class_exists( 'MWB_ZENDESK_Manager' ) ) {
 		public function add_ticket_to_user_table( $columns ) {
 			$columns['user_id'] = 'Tickets';
 			return $columns;
+		}
+		/**
+		 * Create_user_ticket function
+		 *
+		 * @return void
+		 */
+		public function mwb_public_ticket_update_function_call() {
+			require_once MWB_ZENDESK_DIR . '/Library/class-mwb-zendesk-global-functions.php';
+			update_user_ticket();
 		}
 		/**
 		 * Create_user_ticket function
@@ -172,17 +182,20 @@ if ( ! class_exists( 'MWB_ZENDESK_Manager' ) ) {
 					$order = wc_get_order( $value->ID );
 					$order_data = $order->get_data();
 					$user_email = $order_data['billing']['email'];
-					if( ! in_array( $user_email, $select_array_email ,true ) ) {
-					array_push( $select_array_email, $order_data['billing']['email'] );
+					if ( ! in_array( $user_email, $select_array_email, true ) ) {
+						array_push( $select_array_email, $order_data['billing']['email'] );
 					}
 				}
 				?>
 				<div id="select_box_email">
-				<label for="email"> Choose Your Billing Email --</label>
+				<label for="email"> <?php esc_html_e( 'Choose your Billing Email', 'zndskwoo' ); ?></label>
 				<select id="mwb-zendsk-email">
 				<?php foreach( $select_array_email as $key => $value ) { ?>
-					<option value="<?php echo $value ?>" <?php echo ( $value === $user_mail ) ? esc_attr( 'selected' ) : ''; ?> ><?php esc_attr_e( $value ); ?></option> 
-				<?php } } ?>
+					<option value="<?php echo $value ?>"><?php esc_attr_e( $value ); ?></option> 
+				<?php 
+				}
+			}
+			?>
 				</select>
 				</div>
 				<?php
@@ -467,8 +480,8 @@ if ( ! class_exists( 'MWB_ZENDESK_Manager' ) ) {
 			}
 			$tickets       = $api_body->tickets;
 			$ticket_fields = array();
-			$count         = 0;
 			foreach ( $tickets as $key => $single_ticket ) {
+				update_option( get_current_user_id(), $single_ticket->requester_id);
 				$ticket_fields[] = array(
 					'id'          => $single_ticket->id,
 					'subject'     => $single_ticket->subject,
